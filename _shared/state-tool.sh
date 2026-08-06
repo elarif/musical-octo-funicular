@@ -55,11 +55,16 @@ cmd_get() {
 }
 
 # set <dotted.key> <json-value>  e.g. set variables.apports 30000 ; set variables.ca_annuel_ht '[1,2,3]'
+# Bare words (saas, reel, commerce) are coerced to JSON strings; valid JSON (numbers, arrays, objects, quoted strings) is passed through.
 cmd_set() {
   validate
   local key="$1"; local val="$2"
-  jq --argjson v "$val" --arg k "$key" 'setpath(($k | split(".") | map(if . | test("^[0-9]+$") then tonumber else . end)); $v)' "$STATE" > "$STATE.tmp" \
-    && mv "$STATE.tmp" "$STATE"
+  if jq -e . <<<"$val" >/dev/null 2>&1; then
+    jq --argjson v "$val" --arg k "$key" 'setpath(($k | split(".") | map(if . | test("^[0-9]+$") then tonumber else . end)); $v)' "$STATE" > "$STATE.tmp"
+  else
+    jq --arg v "$val" --arg k "$key" 'setpath(($k | split(".") | map(if . | test("^[0-9]+$") then tonumber else . end)); $v)' "$STATE" > "$STATE.tmp"
+  fi
+  mv "$STATE.tmp" "$STATE"
   validate
   echo "set $key"
 }
