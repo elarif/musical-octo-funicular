@@ -1,0 +1,8 @@
+{
+  "name": "kibana-url-deps",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "rison": "^0.1.1"
+  }
+}

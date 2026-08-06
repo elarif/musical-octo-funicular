@@ -1,0 +1,22 @@
+@startuml system-context
+!include <C4/C4_Context>
+
+LAYOUT_WITH_LEGEND()
+
+title System Context Diagram
+
+!// TODO: Replace placeholders below with actual elements from codebase analysis
+
+Person(user, "User", "## TODO: who uses this system ##")
+
+System_Boundary(system, "## TODO: System Name ##") {
+  System(app, "## TODO: Application ##", "## TODO: what it does ##")
+}
+
+!// TODO: Add external systems (System_Ext, SystemDb_Ext) that the application depends on
+!// System_Ext(ext, "External API", "What it provides")
+
+!// TODO: Add relationships (Rel) showing who calls what
+!// Rel(user, app, "Uses", "HTTPS")
+
+@enduml

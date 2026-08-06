@@ -1,0 +1,27 @@
+@startuml container
+!include <C4/C4_Container>
+
+LAYOUT_WITH_LEGEND()
+
+title Container Diagram
+
+!// TODO: Replace placeholders below with actual containers from codebase analysis
+
+Person(user, "User", "## TODO: who uses this system ##")
+
+System_Boundary(system, "## TODO: System Name ##") {
+  !// TODO: Add containers (deployable units, databases, queues, SPAs)
+  !// Container(api, "API Server", "Java 25 + Vert.x", "HTTP API")
+  !// Container(spa, "Web App", "React", "User interface")
+  !// ContainerDb(db, "Database", "PostgreSQL", "Application data")
+  !// ContainerQueue(mq, "Message Queue", "RabbitMQ", "Async events")
+}
+
+!// TODO: Add external systems
+!// System_Ext(ext, "External API", "What it provides")
+
+!// TODO: Add relationships
+!// Rel(user, api, "Uses", "HTTPS")
+!// Rel(api, db, "Reads/Writes", "JDBC")
+
+@enduml

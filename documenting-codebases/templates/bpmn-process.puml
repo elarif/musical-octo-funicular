@@ -1,0 +1,26 @@
+@startuml bpmn-## TODO: process-name ##
+title Business Process: ## TODO: Process Name ##
+
+!// TODO: Replace placeholders with actual process flow from codebase analysis
+!// Use partition for swimlanes (module/service boundaries)
+!// Use if/else for business decisions (XOR gateways)
+!// Use fork/end fork for parallel execution
+!// End every path with stop
+
+start
+partition "## TODO: Entry Point ##" {
+  :## TODO: Trigger event (HTTP request, CLI, event listener)##;
+}
+
+partition "## TODO: Module/Service ##" {
+  :## TODO: Task 1##;
+  if (## TODO: Condition?##) then (yes)
+    :## TODO: Task on yes branch##;
+  else (no)
+    :## TODO: Task on no branch##;
+  endif
+}
+
+:## TODO: Final action##;
+stop
+@enduml

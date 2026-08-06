@@ -1,0 +1,26 @@
+@startuml component
+!include <C4/C4_Component>
+
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - ## TODO: Container Name ##
+
+!// TODO: Add external systems that this container interacts with
+!// System_Ext(ext, "External API", "What it provides")
+!// System_Ext(db, "Database", "Data store")
+
+Container_Boundary(container, "## TODO: Container Name ##") {
+  !// TODO: Add components (modules, packages, classes within this container)
+  !// Component(handler, "RequestHandler", "Spring @RestController", "Handles HTTP requests")
+  !// Component(service, "BusinessService", "Spring @Service", "Business logic")
+  !// Component(repo, "DataRepository", "Spring @Repository", "Data access")
+  !// Component(filter, "AuthFilter", "Filter", "Validates authentication")
+}
+
+!// TODO: Add relationships between components and external systems
+!// Rel(handler, service, "Delegates to")
+!// Rel(service, repo, "Reads/Writes")
+!// Rel(repo, db, "Queries", "JDBC")
+!// Rel(filter, ext, "Validates token", "HTTP")
+
+@enduml
