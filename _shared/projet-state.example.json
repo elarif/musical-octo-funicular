@@ -1,0 +1,43 @@
+{
+  "projet": {
+    "nom": "Exemple Boulangerie",
+    "activite": "Boulangerie-pâtisserie de quartier",
+    "modele": "commerce",
+    "marche_etude": true,
+    "tva_regime": "reel"
+  },
+  "variables": {
+    "apports": 30000,
+    "emprunts": 20000,
+    "investissements_ht": 25000,
+    "ca_mensuel": [3000, 3200, 3500, 3400, 3600, 3800, 4200, 4100, 3700, 3500, 3400, 4500],
+    "tva_collectee_mensuelle": [600, 640, 700, 680, 720, 760, 840, 820, 740, 700, 680, 900],
+    "tva_deductible_mensuelle": [5000, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120],
+    "tva_a_decaisser_mensuelle": [0, 480, 520, 580, 560, 600, 640, 720, 700, 620, 580, 580],
+    "tresorerie_solde": [0, 2520, 2500, 2480, 2460, 2440, 2420, 2400, 2380, 2360, 2340, 2320],
+    "tresorerie_cumul": [0, 2520, 5020, 7500, 9960, 12400, 14820, 17220, 19600, 21960, 24300, 26620],
+    "ca_annuel_ht": [43800, 48000, 52000],
+    "charges_fixes": [28000, 29000, 30000],
+    "charges_variables": [17500, 19200, 20800],
+    "bfr": [4500, 4800, 5100],
+    "caf": [8000, 10000, 12000],
+    "seuil_rentabilite": [35000, 36000, 37000],
+    "point_mort_jours": [292, 274, 260],
+    "investissements_annuels": [25000, 2000, 3000],
+    "remboursements_emprunts_capital": [5000, 5000, 5000],
+    "nouveaux_emprunts": [20000, 0, 0]
+  },
+  "scenarios": {
+    "optimiste": { "ca_annuel_ht": [52560, 57600, 62400] },
+    "nominal": { "ca_annuel_ht": [43800, 48000, 52000] },
+    "pessimiste": { "ca_annuel_ht": [30660, 43200, 52000] }
+  },
+  "alertes": [],
+  "bp_sections": {
+    "executive_summary": "empty",
+    "economique": "partial",
+    "financiere": "partial",
+    "juridique": "empty"
+  },
+  "saas_metrics": {}
+}

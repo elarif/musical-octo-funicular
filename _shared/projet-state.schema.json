@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "projet-state",
+  "type": "object",
+  "required": ["projet", "variables", "scenarios", "alertes", "bp_sections"],
+  "properties": {
+    "projet": {
+      "type": "object",
+      "required": ["nom", "activite", "modele", "marche_etude", "tva_regime"],
+      "properties": {
+        "nom": { "type": "string" },
+        "activite": { "type": "string" },
+        "modele": { "enum": ["commerce", "service", "production", "saas", "digital"] },
+        "marche_etude": { "type": "boolean" },
+        "tva_regime": { "enum": ["franchise", "reel"] }
+      }
+    },
+    "variables": {
+      "type": "object",
+      "properties": {
+        "apports": { "type": "number" },
+        "emprunts": { "type": "number" },
+        "investissements_ht": { "type": "number" },
+        "ca_mensuel": { "type": "array", "items": { "type": "number" }, "minItems": 12, "maxItems": 12 },
+        "tva_collectee_mensuelle": { "type": "array", "items": { "type": "number" }, "minItems": 12, "maxItems": 12 },
+        "tva_deductible_mensuelle": { "type": "array", "items": { "type": "number" }, "minItems": 12, "maxItems": 12 },
+        "tva_a_decaisser_mensuelle": { "type": "array", "items": { "type": "number" }, "minItems": 12, "maxItems": 12 },
+        "tresorerie_solde": { "type": "array", "items": { "type": "number" }, "minItems": 12, "maxItems": 12 },
+        "tresorerie_cumul": { "type": "array", "items": { "type": "number" }, "minItems": 12, "maxItems": 12 },
+        "ca_annuel_ht": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "charges_fixes": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "charges_variables": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "bfr": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "caf": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "seuil_rentabilite": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "point_mort_jours": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "investissements_annuels": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "remboursements_emprunts_capital": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "nouveaux_emprunts": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 }
+      }
+    },
+    "scenarios": {
+      "type": "object",
+      "required": ["optimiste", "nominal", "pessimiste"],
+      "properties": {
+        "optimiste": { "$ref": "#/properties/variables" },
+        "nominal": { "$ref": "#/properties/variables" },
+        "pessimiste": { "$ref": "#/properties/variables" }
+      }
+    },
+    "alertes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "mois_ou_annee", "source_skill", "action"],
+        "properties": {
+          "type": { "enum": ["tresorerie_negative", "ca_sous_seuil"] },
+          "mois_ou_annee": { "type": "number" },
+          "source_skill": { "type": "string" },
+          "action": { "type": "string" }
+        }
+      }
+    },
+    "bp_sections": {
+      "type": "object",
+      "required": ["executive_summary", "economique", "financiere", "juridique"],
+      "properties": {
+        "executive_summary": { "enum": ["draft", "final", "empty"] },
+        "economique": { "enum": ["empty", "partial", "complete"] },
+        "financiere": { "enum": ["empty", "partial", "complete"] },
+        "juridique": { "enum": ["empty", "partial", "complete"] }
+      }
+    },
+    "saas_metrics": {
+      "type": "object",
+      "properties": {
+        "mrr": { "type": "number" },
+        "arr": { "type": "number" },
+        "cac": { "type": "number" },
+        "ltv": { "type": "number" },
+        "churn": { "type": "number" },
+        "capex": { "type": "number" },
+        "opex_mensuel": { "type": "number" }
+      }
+    }
+  }
+}
