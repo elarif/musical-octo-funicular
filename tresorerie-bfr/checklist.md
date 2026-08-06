@@ -1,0 +1,26 @@
+# Checklist — tresorerie-bfr
+
+- [ ] `projet.modele` et `projet.tva_regime` lus via `state-tool.sh`
+- [ ] `variables.apports`, `variables.emprunts`, `variables.ca_mensuel` lus
+- [ ] Nature activité confirmée (commerce / service / production / saas)
+- [ ] BFR calculé avec la formule du modèle
+- [ ] `saas_metrics` populés si saas/digital
+- [ ] Interprétation BFR (>0 besoin, <0 ressource) produite
+- [ ] Ratios calculés (rotation stocks, crédit clients, crédit fournisseurs)
+- [ ] `state-tool.sh set variables.bfr '[x,y,z]'`
+- [ ] Plan trésorerie 12 mois construit (TTC)
+- [ ] Imputation au mois de l'opération (décalages de paiement)
+- [ ] Si `tva_regime=reel`: TVA collectée/deductible calculée mensuellement
+- [ ] TVA à décaisser imputée en mois M+1
+- [ ] Si `tva_regime=franchise`: arrays TVA à zéro, CA/achats TTC
+- [ ] Soldes négatifs détectés
+- [ ] `state-tool.sh patch` pour chaque alerte `tresorerie_negative`
+- [ ] Feedback loop vers `plan-financement-durable` si alerte
+- [ ] Recalcul après résolution de l'alerte
+- [ ] `state-tool.sh set variables.tresorerie_solde '[...]'`
+- [ ] `state-tool.sh set variables.tresorerie_cumul '[...]'`
+- [ ] `state-tool.sh set variables.tva_collectee_mensuelle '[...]'`
+- [ ] `state-tool.sh set variables.tva_a_decaisser_mensuelle '[...]'`
+- [ ] 3 scénarios calculés (params par modèle)
+- [ ] `scenarios.*` écrits via `state-tool.sh`
+- [ ] Disclaimer expert-comptable affiché
