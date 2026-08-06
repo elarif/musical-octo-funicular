@@ -1,0 +1,26 @@
+# Checklist — plan-financement-durable
+
+- [ ] `projet.modele`, `projet.tva_regime` lus via `state-tool.sh`
+- [ ] `variables.bfr.0` lu (depuis skill 3)
+- [ ] Si feedback loop: `alertes[]` lues
+- [ ] Besoins évalués (investissements HT, trésorerie sécurité, BFR)
+- [ ] CapEx vs OpEx distingués si saas/digital
+- [ ] Ressources listées (fonds propres, emprunts, aides)
+- [ ] Équilibre vérifié (ressources ≥ besoins + marge)
+- [ ] Règle prudence (fonds propres ≥ emprunts LMT)
+- [ ] Si `tva_regime=reel`: TVA déductible mois 1 calculée
+- [ ] `state-tool.sh set variables.tva_deductible_mensuelle.0 <valeur>`
+- [ ] `state-tool.sh set variables.apports <valeur>`
+- [ ] `state-tool.sh set variables.emprunts <valeur>`
+- [ ] `state-tool.sh set variables.investissements_ht <valeur>`
+- [ ] Volet 3 ans: CAF calculée pour N/N+1/N+2
+- [ ] Remboursements capital [3] calculés
+- [ ] Nouveaux emprunts [3] / investissements annuels [3]
+- [ ] `state-tool.sh set variables.caf '[x,y,z]'`
+- [ ] `state-tool.sh set variables.investissements_annuels '[x,y,z]'`
+- [ ] `state-tool.sh set variables.remboursements_emprunts_capital '[x,y,z]'`
+- [ ] `state-tool.sh set variables.nouveaux_emprunts '[x,y,z]'`
+- [ ] 3 scénarios calculés (params par modèle)
+- [ ] `scenarios.*` écrits via `state-tool.sh`
+- [ ] Si feedback loop: signaler à skill 3 de recalculer
+- [ ] Disclaimer expert-comptable affiché
