@@ -1,0 +1,21 @@
+# Checklist — seuil-rentabilite
+
+- [ ] `projet.modele` lu via `state-tool.sh get projet.modele`
+- [ ] `variables.ca_annuel_ht.0` lu
+- [ ] Charges fixes recueillies (une question à la fois)
+- [ ] Charges variables recueillies (adaptées au modèle: CAC si saas)
+- [ ] Marge sur coûts variables calculée
+- [ ] Taux de marge calculé
+- [ ] Seuil de rentabilité (€) calculé pour N/N+1/N+2
+- [ ] Point mort (jours) calculé pour N/N+1/N+2
+- [ ] Interprétation opérationnelle concrète produite
+- [ ] `state-tool.sh set variables.charges_fixes '[x,y,z]'`
+- [ ] `state-tool.sh set variables.charges_variables '[x,y,z]'`
+- [ ] `state-tool.sh set variables.seuil_rentabilite '[x,y,z]'`
+- [ ] `state-tool.sh set variables.point_mort_jours '[x,y,z]'`
+- [ ] Scénario optimiste calculé (params par modèle)
+- [ ] Scénario nominal calculé
+- [ ] Scénario pessimiste calculé (CAC x2 / churn +50% si saas)
+- [ ] `scenarios.*` écrits via `state-tool.sh`
+- [ ] Alerte `ca_sous_seuil` émise si CA < seuil (nominal ou pessimiste)
+- [ ] Disclaimer expert-comptable affiché
