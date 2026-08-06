@@ -27,7 +27,7 @@ Orchestrateur méthodologique: détecte `projet.modele` et `projet.tva_regime`, 
 | `plan-financement-durable` | `downstream` + `feedback` | Invoqué pour Q1 (capitaux) et Q5 (pérennité 3 ans) |
 | `tresorerie-bfr` | `downstream` | Invoqué pour Q4 (trésorerie mensuelle) |
 | `seuil-rentabilite` | `downstream` + `feedback` | Invoqué pour Q3 (ventes minimales); reçoit feedback si CA < seuil |
-| `business-plan-redaction` | `upstream` | Invoque ce skill pour la partie financière du BP |
+| `business-plan-redaction` | `downstream` (chaînage) | Invoqué en étape 11 si l'utilisateur veut structurer un dossier complet BP après la matrice des risques |
 | `executive-summary` | `none` | Separate Ways |
 | `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 
@@ -36,7 +36,7 @@ Orchestrateur méthodologique: détecte `projet.modele` et `projet.tva_regime`, 
 | Champ | Valeur |
 |---|---|
 | Document ID | `SKILL-PFD-DEM-001` |
-| Revision | 1 |
+| Revision | 2 |
 | Effective Date | 2026-08-06 |
 | Owner | Skills maintainer |
 | Approver | Skills maintainer |
@@ -99,8 +99,11 @@ Voir `_shared/bpifrance-finance-glossary.md`. Termes centraux: Matrice des risqu
     - Pour chaque scénario (optimiste/nominal/pessimiste) et chaque question Q1-Q5, identifier: zone fragile, point de rupture, hypothèse à valider.
     - Output: tableau `risque | scénario(s) concerné(s) | gravité | action de retravail recommandée`.
     - Posture: l'agent identifie, l'entrepreneur décide. Aucun verdict binaire.
+11. **Chaînage vers la rédaction du business plan**: après la matrice des risques, si l'utilisateur veut aller plus loin (présenter le projet à un financeur, structurer un dossier complet), invoquer `business-plan-redaction` (skill 5). Le state JSON (`projet.*`, `variables.*`, `alertes[]`) est déjà peuplé — skill 5 le lit et retravaille la partie financière si des `alertes[]` restent non résolues. L'agent propose ce chaînage explicitement mais ne l'impose pas: l'entrepreneur peut aussi s'arrêter à la matrice des risques ou retravailler d'abord les hypothèses.
 
 ## Key Principles
+
+- **Chaînage bidirectionnel avec `business-plan-redaction`**: ce skill amorce les prévisions (state peuplé), skill 5 finalise le dossier. L'un sans l'autre laisse le travail inachevé; ensemble ils couvrent la séquence entière prévisions → BP.
 
 - Une question à la fois.
 - Scénario prudent: minimiser recettes, maximiser coûts (le pessimiste formalise cela).
@@ -128,3 +131,4 @@ Voir `_shared/bpifrance-finance-glossary.md`. Termes centraux: Matrice des risqu
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: orchestrateur + détection modèle/TVA + 5 questions + matrice des risques (no go/no-go) + state-tool. | elarif | elarif |
+| 2 | 2026-08-06 | Chaînage explicite vers `business-plan-redaction` (étape 11) + Related Skills mis à jour (downstream chaînage) + Key Principle chaînage bidirectionnel. | elarif | elarif |

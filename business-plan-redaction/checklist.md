@@ -1,5 +1,6 @@
 # Checklist — business-plan-redaction
 
+- [ ] Pré-check: `projet.modele` lu via `state-tool.sh`; si vide → proposer `previsions-financieres-demarrage` (skill 1) d'abord
 - [ ] Destinataire défini (investisseur / banque / partenaire / incubateur)
 - [ ] Section 1: executive summary → skill 6 invoqué (en dernier)
 - [ ] Section 2: vous et votre équipe (CV, complémentarité)

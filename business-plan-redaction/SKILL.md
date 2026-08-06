@@ -24,7 +24,7 @@ Structure le business plan en 8 sections, adapte le ton au destinataire (investi
 
 | Skill | Relation | Rôle |
 |---|---|---|
-| `previsions-financieres-demarrage` | `downstream` | Invoqué pour la partie financière (orchestrateur) |
+| `previsions-financieres-demarrage` | `downstream` + `upstream` (chaînage) | Invoqué pour la partie financière (orchestrateur); ce skill le propose en pré-check si le state est vide |
 | `plan-financement-durable` | `downstream` | Invoqué pour la partie financière |
 | `tresorerie-bfr` | `downstream` | Invoqué pour la partie financière |
 | `seuil-rentabilite` | `downstream` | Invoqué pour la partie financière |
@@ -36,7 +36,7 @@ Structure le business plan en 8 sections, adapte le ton au destinataire (investi
 | Champ | Valeur |
 |---|---|
 | Document ID | `SKILL-BPR-001` |
-| Revision | 1 |
+| Revision | 2 |
 | Effective Date | 2026-08-06 |
 | Owner | Skills maintainer |
 | Approver | Skills maintainer |
@@ -79,6 +79,7 @@ Voir `_shared/bpifrance-finance-glossary.md`. Termes centraux: Business plan, Ex
 
 ## Process
 
+0. **Pré-check prévisions financières**: lire `projet.modele` via `state-tool.sh get projet.modele`. Si vide ou state inexistant (l'utilisateur arrive directement à la rédaction du BP sans avoir fait ses prévisions), proposer d'invoquer `previsions-financieres-demarrage` (skill 1) d'abord pour peupler `projet.*`, `variables.*` et résoudre les `alertes[]`. Le BP peut être rédigé en mode draft (sections chiffrées en narration qualitative) même sans prévisions complètes, mais la partie financière sera plus solide après skill 1. L'agent propose ce chaînage mais ne l'impose pas.
 1. **Définir destinataire** (adapte le ton):
    - Investisseur → rentabilité, scalabilité, ROI.
    - Banque → solidité financière, capacité remboursement, gestion risques.
@@ -127,3 +128,4 @@ Voir `_shared/bpifrance-finance-glossary.md`. Termes centraux: Business plan, Ex
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: business plan 8 sections + adaptation destinataire + 11 erreurs + alertes + state-tool. | elarif | elarif |
+| 2 | 2026-08-06 | Pré-check (étape 0) proposant `previsions-financieres-demarrage` si state vide + Related Skills mis à jour (chaînage bidirectionnel). | elarif | elarif |

@@ -14,4 +14,5 @@
 - [ ] `alertes[]` lues via `state-tool.sh get alertes`
 - [ ] Matrice des risques produite (pas de go/no-go)
 - [ ] Tableau: risque | scénario(s) | gravité | action de retravail
+- [ ] Chaînage proposé: invoquer `business-plan-redaction` si l'utilisateur veut un dossier BP complet
 - [ ] Disclaimer expert-comptable affiché
