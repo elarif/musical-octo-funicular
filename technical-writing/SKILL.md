@@ -10,7 +10,7 @@ description: Use when writing, structuring, reviewing, or revising technical doc
 | Field | Value |
 |---|---|
 | Document ID | `SKILL-TW-001` |
-| Revision | 6 |
+| Revision | 7 |
 | Effective Date | 2026-07-19 |
 | Owner | Skills maintainer |
 | Approver | Skills maintainer |
@@ -37,6 +37,7 @@ The writer states the following audience attributes before drafting any document
 - Document structure per document type (SOP, work instruction, deviation, RCA, CAPA, reference, tutorial, error message).
 - Lifecycle: planning, review, approval, versioning, effective dates.
 - Formatting: Markdown, visuals, tables, accessibility, error messages.
+- Google developer documentation style guide rules (voice/tone, word list, punctuation, code formatting) for dev-facing documents.
 
 **Scope does NOT cover**:
 
@@ -61,6 +62,9 @@ The writer defines every acronym and term on first use. This section collects th
 | Ishikawa | Fishbone diagram method for root-cause analysis, named after Kaoru Ishikawa |
 | GMP | Good Manufacturing Practice |
 | TBD | To Be Determined (banned as an Effective Date value) |
+| Sentence case | Capitalize only the first word of a heading or title, plus proper nouns |
+| Oxford comma | Comma before the final item in a list of 3+ items (optional but must be consistent within a document) |
+| Cross-reference | Descriptive link whose anchor text identifies the target by name or topic |
 
 ## When to Use
 
@@ -108,7 +112,7 @@ SOPs and regulated documents add: **Document ID, Revision, Effective Date, Appro
 
 ## Domain Model (DDD)
 
-Technical writing is one domain with four bounded contexts. Each context owns its rules and ubiquitous language. The writer identifies which context the task lives in before writing — that determines which rules apply. See Figure 1.
+Technical writing is one domain with five bounded contexts. Each context owns its rules and ubiquitous language. The writer identifies which context the task lives in before writing — that determines which rules apply. See Figure 1.
 
 ```dot
 digraph contexts {
@@ -119,15 +123,18 @@ digraph contexts {
   Arch  [label="Document Architecture\n(supporting)"];
   Life  [label="Lifecycle & Compliance\n(supporting)"];
   Fmt   [label="Formatting & Tooling\n(generic)"];
+  DevStyle [label="Developer Documentation Style\n(supporting)"];
 
   Craft -> Arch      [label="supplies style rules"];
+  Craft -> DevStyle  [label="applies Google editorial rules"];
   Fmt  -> Arch      [label="embeds"];
+  Fmt  -> DevStyle  [label="refines for dev docs"];
   Life -> Arch      [label="governs versioning/approval"];
   Craft -> Life     [label="applies during authoring", style=dashed];
 }
 ```
 
-*Figure 1: The four bounded contexts of technical writing and the relationships between them.*
+*Figure 1: The five bounded contexts of technical writing and the relationships between them.*
 
 | Context | Owns | Ubiquitous language (excerpts) |
 |---|---|---|
@@ -135,8 +142,11 @@ digraph contexts {
 | **Document Architecture** (supporting) | Structure per document type, sections, templates, Diátaxis mode | `SOP`, `work instruction`, `scope`, `procedure`, `revision history`, `Diátaxis mode` |
 | **Lifecycle & Compliance** (supporting) | Planning, review, approval, versioning, deviations/RCA/CAPA, audit traceability | `deviation`, `root cause`, `CAPA`, `approver`, `effective date`, `control` |
 | **Formatting & Tooling** (generic) | Markdown, visuals, tables, accessibility, error messages | `markdown`, `alt text`, `fenced code block`, `callout`, `error message` |
+| **Developer Documentation Style** (supporting) | Google dev docs style guide: voice/tone, word list, punctuation, formatting, linking, computer interfaces, API reference comments | `sentence case`, `active voice`, `second person`, `cross-reference`, `code-in-text`, `placeholder`, `UI element`, `contraction` |
 
 Every document touches all four contexts. The writer decides the document *type* first (Architecture), then states the *audience* (Craft). The writer then follows *lifecycle* rules — review, version, approve — and applies *formatting* via Markdown and visuals.
+
+If the audience is software developers or technical practitioners, the Developer Documentation Style context is active and its rules apply during the Draft phase. If the audience is GMP operators, auditors, or a regulated environment, the SOP rules (existing `reference/sops-and-regulated-docs.md`) keep priority; the Google style guide is a secondary source in that case.
 
 ## Core Pattern — Before / After
 
@@ -197,6 +207,7 @@ The writer finds the detailed rules and templates in the following files:
 
 - Style rules, sentence/paragraph patterns, lists/tables, audience analysis → `reference/style-and-clarity.md`
 - SOP structure, work instructions, deviations, RCA, CAPA, regulatory citations → `reference/sops-and-regulated-docs.md`
+- Developer documentation style rules (Google) — voice/tone, word list, punctuation, code formatting, cross-refs → `reference/dev-doc-style.md`
 - Copy-paste starting points → `templates/*.md`
 
 ## Rationalization Table
@@ -256,3 +267,4 @@ Each of these means: stop, apply the four required slots, cite clauses, flag unk
 | 4 | 2026-07-19 | Full self-compliance: lead sentence on Hallucination list; standardized "document" over "doc"; completed 6-point audience analysis; accurate Doc type (Skill reference) | Skills team | Skills maintainer |
 | 5 | 2026-07-19 | Terminology and visuals compliance: added Definitions section (SOP, RCA, CAPA, API, DDD, 5W1H, Diátaxis, Ishikawa, GMP, TBD); numbered caption on Figure 1; split 35-word sentence; parallelized Core Pattern list | Skills team | Skills maintainer |
 | 6 | 2026-07-19 | Style §2: split the 3-comma sentences in Core Principle and Domain Model (parenthetical lists → em-dash apposition or separate sentence) | Skills team | Skills maintainer |
+| 7 | 2026-08-20 | Added Developer Documentation Style bounded context (supporting) + `reference/dev-doc-style.md` capturing Google dev docs style guide SOTA; added 3 Definitions (Sentence case, Oxford comma, Cross-reference); added routing rule (dev audience → Google rules active; regulated audience → SOP priority); updated Domain Model digraph with DevStyle node | Skills maintainer | Skills maintainer |
