@@ -144,7 +144,7 @@ digraph contexts {
 | **Formatting & Tooling** (generic) | Markdown, visuals, tables, accessibility, error messages | `markdown`, `alt text`, `fenced code block`, `callout`, `error message` |
 | **Developer Documentation Style** (supporting) | Google dev docs style guide: voice/tone, word list, punctuation, formatting, linking, computer interfaces, API reference comments | `sentence case`, `active voice`, `second person`, `cross-reference`, `code-in-text`, `placeholder`, `UI element`, `contraction` |
 
-Every document touches all four contexts. The writer decides the document *type* first (Architecture), then states the *audience* (Craft). The writer then follows *lifecycle* rules — review, version, approve — and applies *formatting* via Markdown and visuals.
+Every document touches all five contexts. The writer decides the document *type* first (Architecture), then states the *audience* (Craft). The writer then follows *lifecycle* rules — review, version, approve — applies *formatting* via Markdown and visuals, and applies *Google editorial rules* (DevStyle) when the audience is developers.
 
 If the audience is software developers or technical practitioners, the Developer Documentation Style context is active and its rules apply during the Draft phase. If the audience is GMP operators, auditors, or a regulated environment, the SOP rules (existing `reference/sops-and-regulated-docs.md`) keep priority; the Google style guide is a secondary source in that case.
 
