@@ -164,8 +164,6 @@ wc -w skills/path/SKILL.md
 
 **Why no @ links:** `@` syntax force-loads files immediately, consuming 200k+ context before the writer needs them.
 
-## Flowchart Usage
-
 ---
 
 ## Modification

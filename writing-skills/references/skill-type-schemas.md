@@ -87,8 +87,6 @@ What goes wrong + fixes
 Concrete results
 ```
 
-## Skill Discovery Optimization (SDO)
-
 ---
 
 ## Modification
