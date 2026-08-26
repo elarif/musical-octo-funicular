@@ -1,6 +1,7 @@
 ---
 name: dispatching-parallel-agents
 description: Use when the controller faces 2+ independent failures across distinct test files or subsystems — sequential investigation of independent failures wastes time and burns the controller's coordination context, so one subagent per independent problem domain runs concurrently
+type: orchestrator
 ---
 
 # Dispatching Parallel Agents
@@ -36,9 +37,9 @@ This skill dispatches one subagent per independent problem domain so the subagen
 
 | Sibling skill | Relationship | Notes |
 |---|---|---|
-| `subagent-driven-development` | `conformist` | Overlaps — both dispatch subagents. This skill is the parallel-dispatch pattern (concurrent, independent domains); SDD is the per-task-sequential pattern (one task, one subagent, ordered). Vocabulary aligns (subagent, brief, dispatch), so this skill adopts SDD's dispatch-brief shape wholesale rather than re-translating. Use SDD when tasks are ordered or dependent; use this skill when tasks are independent. |
 | `systematic-debugging` | `downstream` | `systematic-debugging` consumes this skill to parallelize failure investigation when 2+ independent root causes surface. Translation: a "failure" in `systematic-debugging` becomes one "problem domain" here; one debugging hypothesis per subagent. |
 | `receiving-code-review` | `none` | Separate ways. Do not chain — `receiving-code-review` operates on review feedback, not on parallel dispatch. |
+| `subagent-driven-development` | `conformist` | Overlaps — both dispatch subagents. This skill is the parallel-dispatch pattern (concurrent, independent domains); SDD is the per-task-sequential pattern (one task, one subagent, ordered). Vocabulary aligns (subagent, brief, dispatch), so this skill adopts SDD's dispatch-brief shape wholesale rather than re-translating. Use SDD when tasks are ordered or dependent; use this skill when tasks are independent. |
 
 **Translation notes (A4):**
 
@@ -320,3 +321,4 @@ None. This skill follows all structural rules from the IDDD spec: required slots
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions, figure caption, active voice, lead sentences on all lists, Revision History | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-20 | IDDD-layer rewrite: added Snapshot, Quick Reference (projection), Related Skills with typed relationships (`conformist`/`downstream`/`none`) + Translation notes, Idempotency line, Workflow ledger subsection, Run ID requirement (L4.6), Transaction sprawl warning (L12.5); rewrote `description` as a specific Domain Event naming the failure mode; added Factory announce line; renamed generic headings to ubiquitous language (Overview→Core Principle, The Pattern→Dispatch Protocol, When to Use→Trigger Conditions, When NOT to Use→Anti-Triggers, Subagent Prompt Structure→Subagent Brief Format, Common Mistakes labeled projection, Real Example→Worked Example with Given/When/Expect, Verification→Integration Checklist); split the Review-and-Integrate god-method into one-intent-per-step steps; added run ID + transaction-sprawl rows to Common Mistakes; added Definitions entries for Problem domain, Brief, Run ID, Workflow ledger; no deviations | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
