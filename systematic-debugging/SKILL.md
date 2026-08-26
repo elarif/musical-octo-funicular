@@ -1,6 +1,7 @@
 ---
 name: systematic-debugging
 description: Use when the agent faces a bug, test failure, or unexpected behavior and is tempted to apply a fix before understanding it — random fixes waste time and create new bugs; this skill forces root-cause investigation before any fix is proposed.
+type: sub-skill
 ---
 
 # Systematic Debugging
@@ -464,3 +465,4 @@ No structural rules from the IDDD spec were broken in this revision. If a future
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Self-compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions; active voice throughout; lead sentences on all lists; Revision History | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer: added Snapshot, Quick Reference (DTO), Related Skills with typed relationships + translation notes, Public Interface for Composition, Environment Adapter, Deviations note, Examples (Given/When/Expect); rewrote `description` as a specific trigger naming the failure mode; added announce line; renamed Overview → Why Random Fixes Fail; added "always" scenarios to the core principle; labeled quick-reference tables as projections; replaced inline sibling-skill prose with `name` references + one-line purpose; abstracted tool commands behind AGENTS.md-first adapter | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
