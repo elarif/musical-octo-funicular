@@ -1,6 +1,7 @@
 ---
 name: using-git-worktrees
 description: Use when feature work would otherwise happen on the main branch and collide with other work, or before executing an implementation plan that requires a separate workspace. Prevents uncommitted changes from leaking across features and avoids clobbering an in-progress branch.
+type: sub-skill
 ---
 
 # Using Git Worktrees
@@ -24,9 +25,9 @@ This skill isolates feature work in its own git worktree so it cannot collide wi
 
 | Sibling | Relationship | What crosses the boundary |
 |---|---|---|
+| `finishing-a-development-branch` | shared-kernel | Both skills co-maintain the worktree/branch/HEAD vocabulary and git workspace-state lifecycle. A change to worktree/branch/HEAD terms here must be flagged in both revision histories. |
 | `subagent-driven-development` | downstream | SDD requires an isolated workspace before dispatching subagents; this skill supplies it. |
 | `executing-plans` | downstream | Executing an implementation plan requires an isolated workspace; this skill supplies it. |
-| `finishing-a-development-branch` | shared-kernel | Both skills co-maintain the worktree/branch/HEAD vocabulary and git workspace-state lifecycle. A change to worktree/branch/HEAD terms here must be flagged in both revision histories. |
 
 **Translation notes:**
 - For `subagent-driven-development` and `executing-plans`: the "isolated workspace" they request arrives here as a worktree path on a named branch. They consume only the path + branch name + baseline-test result; they do not consume this skill's detection or fallback logic.
@@ -305,3 +306,4 @@ None at this revision. All structural rules from the IDDD layer are honored: git
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions; active voice throughout; lead sentences on all lists; Revision History | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-20 | IDDD-layer application: added Snapshot, Quick Reference (DTO + projection label), Related Skills with typed relationships (subagent-driven-development, executing-plans downstream; finishing-a-development-branch shared-kernel) and Translation notes; Environment Adapter note (AGENTS.md git conventions); rewritten description as specific trigger naming the failure mode; announce line verb aligned with skill name; renamed generic headings (Overview → Workspace Isolation Principle, Step 2/3 to work-speak verbs, 1a/1b to intent-revealing verbs); added Worked Example as pure VO in Given/When/Expect form; expanded each "always/never" rule with ≥2 motivating scenarios; added "Deviations" note (none); preserved all bash commands, Step 0 detection, Step 1a/1b creation, Step 2 project setup, Step 3 baseline verification, quick reference table, common mistakes, red flags; `name` unchanged. | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
