@@ -1,6 +1,7 @@
 ---
 name: kibana-prod-investigation
 description: Déclencher quand un symptôme de production est signalé (erreur 500, latence, alerte, throughput en chute) et qu'il faut produire des preuves vérifiables via Elasticsearch/Kibana en read-only strict ; évite l'investigation au hasard qui masque la cause racine et les conclusions non reproductibles.
+type: sub-skill
 ---
 
 # Kibana Prod Investigation
@@ -282,3 +283,4 @@ Aucune déviation structurelle. Les fichiers de référence et scripts sont inde
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Mise en conformité technical-writing : ajout de Document Metadata, Audience, Objectif/Périmètre, Définitions, voix active, phrase d'introduction avant chaque liste, Historique des révisions. | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-20 | Couche IDDD : Aperçu (snapshot), Référence rapide (projection), Skills associés avec relations typées + Translation, Repository index (reference/ + scripts/), Environment adapter, Idempotence, Exemples Given/When/Expect, éclatement Phase 5 (capture vs échecs), renommage headings en langue ubiquitaire, description en Domain Event nommant le failure mode, motivation ≥2 scénarios sur la règle de séquence des phases. Aucune déviation. | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
