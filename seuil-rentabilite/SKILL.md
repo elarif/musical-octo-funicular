@@ -28,10 +28,10 @@ Calcule le seuil de rentabilité (€) et le point mort (temps) d'un projet de c
 |---|---|---|
 | `previsions-financieres-demarrage` | `upstream` | Orchestrateur qui invoque ce skill pour Q3 (ventes minimales rentabilité) |
 | `business-plan-redaction` | `upstream` | Invoque ce skill pour la partie financière du BP |
+| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
+| `executive-summary` | `downstream` | Consomme `seuil_rentabilite` en mode final |
 | `tresorerie-bfr` | `none` | Separate Ways — pas de chevauchement direct |
 | `plan-financement-durable` | `none` | Separate Ways |
-| `executive-summary` | `downstream` | Consomme `seuil_rentabilite` en mode final |
-| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 
 ## Document Metadata
 
