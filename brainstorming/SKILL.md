@@ -1,6 +1,7 @@
 ---
 name: brainstorming
 description: Fires when the agent received a creative-work request (new feature, component, behavior change) and must not begin implementation until user-approved design and spec exist. Prevents the failure mode of jumping to code on a half-understood idea, producing rework and silent scope creep.
+type: orchestrator
 ---
 
 # Brainstorming Ideas Into Designs
@@ -25,11 +26,11 @@ This skill is the only skill that may run before implementation work starts. Whe
 
 ## Related Skills
 
+- **using-superpowers** — `upstream`. Loads and announces this skill first when a creative-work trigger is detected. *Translation:* using-superpowers hands this skill the raw user request plus working directory; this skill treats that handoff as "the idea under exploration" and does not assume the parent's loaded context (L13.1 — separate context per skill).
+- **technical-writing** — `shared-kernel`. Co-maintains the Document Metadata, Audience, Purpose/Scope, Definitions, and Revision History slots. Changes to those slot shapes must be flagged in both skills' revision histories.
 - **writing-plans** — `downstream`. Brainstorming produces the user-approved spec that writing-plans consumes to build an implementation plan. *Translation:* writing-plans receives the spec file path and a one-line acceptance summary; it calls that artifact "the plan source" and must not re-derive the design.
 - **executing-plans** — `downstream`. Consumes the implementation plan that writing-plans produced from this skill's spec. *Translation:* executing-plans sees the spec only indirectly via the plan; this skill never dispatches executing-plans directly.
 - **subagent-driven-development** — `downstream`. May consume this skill's spec when a plan step fans out to parallel subagents. *Translation:* subagents receive the relevant spec section as a brief, not the whole brainstorming transcript; they call it "the design context."
-- **using-superpowers** — `upstream`. Loads and announces this skill first when a creative-work trigger is detected. *Translation:* using-superpowers hands this skill the raw user request plus working directory; this skill treats that handoff as "the idea under exploration" and does not assume the parent's loaded context (L13.1 — separate context per skill).
-- **technical-writing** — `shared-kernel`. Co-maintains the Document Metadata, Audience, Purpose/Scope, Definitions, and Revision History slots. Changes to those slot shapes must be flagged in both skills' revision histories.
 - **requesting-code-review** / **receiving-code-review** / **systematic-debugging** / **test-driven-development** / **verification-before-completion** / **documenting-codebases** / **dispatching-parallel-agents** / **finishing-a-development-branch** / **kibana-prod-investigation** / **using-git-worktrees** — `none`. These skills run after implementation begins; this skill's Hard Gate forbids entering their territory from here. Do not chain.
 
 ## Document Metadata
@@ -282,3 +283,4 @@ If the user agrees to the companion, read the detailed guide before proceeding: 
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Self-compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions; active voice throughout; lead sentences on all lists; numbered Figure 1 caption; replaced banned vague words; standardized "document" over "doc" | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer: added Snapshot, Quick Reference (projection-labeled), Related Skills with typed relationships + Translation notes, Examples in Given/When/Expect, stable identity note, expanded Definitions; renamed Process headings to intent-revealing phrases; rewrote frontmatter description as a specific Domain Event naming the concrete failure mode; added announce line as Factory Method; replaced raw visual-companion inline reference with path + one-line purpose; added Hard Gate motivating scenarios. Deviations: none — all structural rules followed. | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
