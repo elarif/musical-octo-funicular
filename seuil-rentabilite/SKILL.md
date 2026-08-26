@@ -1,6 +1,7 @@
 ---
 name: seuil-rentabilite
 description: Déclencher quand l'utilisateur cherche le seuil de rentabilité, le point mort, la rentabilité minimale, ou veut répartir charges fixes/variables d'un projet de création d'entreprise (commerce, service, production ou SaaS/digital). Calcule le CA minimum pour ne pas faire de pertes et le traduit en objectif opérationnel concret (nb articles/jour, nb abonnés, etc.).
+type: sub-skill
 ---
 
 # Seuil de rentabilité
@@ -135,3 +136,4 @@ Pour SaaS pessimiste: CAC x2 augmente les charges variables, churn +50% baisse l
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: seuil rentabilité multi-modèle + stress-test 3 scénarios + state-tool. | elarif | elarif |
+| 2 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés par catégorie selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
