@@ -1,6 +1,7 @@
 ---
 name: executing-plans
 description: Use when a written implementation plan must be executed in a separate session with review checkpoints — prevents the failure mode where executing the plan in the main session pollutes the orchestrator's context with task-by-task detail and loses track of which tasks are confirmed complete
+type: orchestrator
 ---
 
 # Executing Plans
@@ -33,9 +34,9 @@ The skill is a saga: it tracks each task's status (pending / in_progress / confi
 |---|---|---|
 | `writing-plans` | `upstream` | Produces the plan file this skill executes. |
 | `using-git-worktrees` | `upstream` | Ensures an isolated workspace before execution begins. |
-| `subagent-driven-development` | `none` (alternative) | Same plan-consumption contract, but dispatches subagents per task. |
 | `finishing-a-development-branch` | `downstream` | Consumed at the natural completion checkpoint. |
 | `requesting-code-review` | `downstream` | Consumed at review checkpoints the plan designates. |
+| `subagent-driven-development` | `none` (alternative) | Same plan-consumption contract, but dispatches subagents per task. |
 
 **Choice criterion — `executing-plans` vs `subagent-driven-development`:** Use `subagent-driven-development` when the platform supports subagents and the plan's tasks are independent enough to parallelize; it keeps the orchestrator's context clean. Use `executing-plans` when subagents are unavailable, when tasks must run strictly sequentially in one context, or when the plan is small enough that in-session execution does not pollute the orchestrator. The two are `none` (alternatives), not `upstream`/`downstream` of each other — pick one per run, do not chain.
 
@@ -214,3 +215,4 @@ See each skill's own SKILL.md for its protocol — do not restate it here.
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope (with "does NOT cover"), active voice throughout, lead sentences on all lists, Revision History | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer: added Snapshot, Quick Reference (projection), Related Skills with typed relationships + Translation notes, Idempotency line, Workflow ledger subsection, Definitions, Examples in Given/When/Expect, Deviations note; rewrote `description` as specific trigger naming failure mode; renamed Process headings to work-speak; added ≥2 scenarios per stop-and-ask rule; replaced sibling-skill prose with `name` references | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

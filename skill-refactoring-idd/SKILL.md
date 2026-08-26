@@ -1,6 +1,7 @@
 ---
 name: skill-refactoring-idd
 description: Use when a Java codebase must be refactored toward Domain-Driven Design (Vaughn Vernon style) and refactoring without a safety net has broken production — fires the moment characterization tests are missing or Core/Supporting/Generic subdomain triage has not been done before tactical modelling
+type: sub-skill
 ---
 
 # Refactoring IDDD (Vaughn Vernon)
@@ -30,8 +31,8 @@ Tu refactoras une base Java legacy vers le DDD style Vaughn Vernon sans casser l
 
 | Skill | Relation | Usage |
 |---|---|---|
-| `technical-writing` | `shared-kernel` | Co-définition des règles de structure de document (slots requis, voix active, historique de révisions). Toute modification des règles communes doit être flaguée dans les deux historiques. |
 | `writing-skills` | `upstream` | Le processus TDD de `writing-skills` testerait cette compétence (micro-tests Given/When/Expect). Consomme son protocole de validation. |
+| `technical-writing` | `shared-kernel` | Co-définition des règles de structure de document (slots requis, voix active, historique de révisions). Toute modification des règles communes doit être flaguée dans les deux historiques. |
 | `test-driven-development` | `shared-kernel` | Co-maintien du vocabulaire « filet de sécurité » et de la discipline « test/caractérisation d'abord ». Toute évolution du terme doit être flaguée dans les deux historiques. |
 
 **Translation (pour chaque référence cross-skill) :**
@@ -226,6 +227,7 @@ Cette compétence applique consciemment les déviations suivantes aux règles st
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Mise en conformité technical-writing : ajout frontmatter YAML, métadonnées document, audience, objectif/périmètre, définitions, voix active, phrases d'introduction, historique des révisions | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-20 | Couche IDDD : Aperçu (≤200 mots), Référence rapide (projection), Skills associés (typed relationships + Translation), description reformulée en Domain Event nommant le failure mode, announce line Factory Method, Définitions étendues à tout l'ubiquitous language, règles « toujours » justifiées par ≥2 scénarios, exemple Given/When/Expect, section Déviations (L10.7) | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
 
 ---
 

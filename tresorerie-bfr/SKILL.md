@@ -1,6 +1,7 @@
 ---
 name: tresorerie-bfr
 description: Déclencher quand l'utilisateur cherche le plan de trésorerie, le BFR (besoin en fonds de roulement), la trésorerie mensuelle, ou veut analyser un décalage de paiement d'un projet de création d'entreprise (commerce, service, production ou SaaS/digital). Calcule le BFR selon le modèle, construit le plan de trésorerie 12 mois avec TVA à décaisser en M+1, détecte les soldes négatifs et déclenche une feedback loop vers le plan de financement.
+type: sub-skill
 ---
 
 # Trésorerie et BFR
@@ -24,12 +25,12 @@ Calcule le BFR (formule multi-modèle: commerce, service, SaaS) et construit le 
 
 | Skill | Relation | Rôle |
 |---|---|---|
-| `plan-financement-durable` | `downstream` + `feedback` | Reçoit le BFR calculé ici; reçoit les feedback loops (solde négatif → ajouter apport/emprunt) |
 | `previsions-financieres-demarrage` | `upstream` | Orchestrateur qui invoque ce skill pour Q4 (trésorerie mensuelle) |
 | `business-plan-redaction` | `upstream` | Invoque ce skill pour la partie financière du BP |
-| `seuil-rentabilite` | `none` | Separate Ways |
-| `executive-summary` | `downstream` | Consomme les données de trésorerie en mode final |
 | `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
+| `plan-financement-durable` | `downstream` + `feedback` | Reçoit le BFR calculé ici; reçoit les feedback loops (solde négatif → ajouter apport/emprunt) |
+| `executive-summary` | `downstream` | Consomme les données de trésorerie en mode final |
+| `seuil-rentabilite` | `none` | Separate Ways |
 
 ## Document Metadata
 
@@ -156,3 +157,4 @@ Persister dans `scenarios.*` via `state-tool.sh`.
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: BFR multi-modèle + plan trésorerie 12 mois + TVA M+1 + feedback loop + state-tool. | elarif | elarif |
+| 2 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés par catégorie selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

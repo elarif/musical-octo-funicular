@@ -1,6 +1,7 @@
 ---
 name: previsions-financieres-demarrage
 description: Déclencher quand l'utilisateur cherche par où commencer ses prévisions financières, la viabilité ou la faisabilité financière d'un projet de création d'entreprise, ou ses comptes prévisionnels. Orchestrateur méthodologique: détecte le modèle (commerce, service, production, SaaS) et le régime TVA, applique la méthode 3 étapes (lister flux → répartir → plan trésorerie), route vers les 5 questions de viabilité, et consolide une matrice des risques (JAMAIS de verdict go/no-go).
+type: orchestrator
 ---
 
 # Prévisions financières — démarrage
@@ -24,12 +25,12 @@ Orchestrateur méthodologique: détecte `projet.modele` et `projet.tva_regime`, 
 
 | Skill | Relation | Rôle |
 |---|---|---|
+| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 | `plan-financement-durable` | `downstream` + `feedback` | Invoqué pour Q1 (capitaux) et Q5 (pérennité 3 ans) |
 | `tresorerie-bfr` | `downstream` | Invoqué pour Q4 (trésorerie mensuelle) |
 | `seuil-rentabilite` | `downstream` + `feedback` | Invoqué pour Q3 (ventes minimales); reçoit feedback si CA < seuil |
 | `business-plan-redaction` | `downstream` (chaînage) | Invoqué en étape 11 si l'utilisateur veut structurer un dossier complet BP après la matrice des risques |
 | `executive-summary` | `none` | Separate Ways |
-| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 
 ## Document Metadata
 
@@ -132,3 +133,4 @@ Voir `_shared/bpifrance-finance-glossary.md`. Termes centraux: Matrice des risqu
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: orchestrateur + détection modèle/TVA + 5 questions + matrice des risques (no go/no-go) + state-tool. | elarif | elarif |
 | 2 | 2026-08-06 | Chaînage explicite vers `business-plan-redaction` (étape 11) + Related Skills mis à jour (downstream chaînage) + Key Principle chaînage bidirectionnel. | elarif | elarif |
+| 3 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés par catégorie selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

@@ -1,6 +1,7 @@
 ---
 name: finishing-a-development-branch
 description: Use when implementation is complete, all tests pass, and the writer must decide how to integrate the work — prevents unverified branches from being merged or shipped with failing tests, unpushed commits, or orphaned worktrees left behind
+type: sub-skill
 ---
 
 # Finishing a Development Branch
@@ -41,11 +42,11 @@ Cap at ~10 entries. Each entry names the sibling by `name` and the relationship 
   - *Translation:* SDD hands off a finished task tree with all subagents confirmed complete; this skill treats that as "implementation complete, proceed to Step 1."
 - **executing-plans** — `upstream`. executing-plans invokes this skill at the end of plan execution.
   - *Translation:* executing-plans hands off a fully executed plan with all steps confirmed; this skill treats that as "implementation complete, proceed to Step 1."
-- **using-git-worktrees** — `shared-kernel`. Both skills manage git workspace state and co-maintain the `GIT_DIR` / `GIT_COMMON` / worktree-provenance terms. A change to those terms here must be flagged in both revision histories.
 - **requesting-code-review** — `upstream`. Review must pass before this skill runs; a branch cannot be finished until review is green.
   - *Translation:* requesting-code-review hands off an approved review verdict; this skill treats that as "quality gate satisfied, proceed to integration."
 - **verification-before-completion** — `upstream`. The "verify tests pass" gate is owned by that skill; this skill delegates the verification protocol to it by name and only re-states the project-test-runner command for convenience.
   - *Translation:* verification-before-completion hands off a verification ledger; this skill treats a green ledger as the signal to present the menu.
+- **using-git-worktrees** — `shared-kernel`. Both skills manage git workspace state and co-maintain the `GIT_DIR` / `GIT_COMMON` / worktree-provenance terms. A change to those terms here must be flagged in both revision histories.
 
 ## Audience
 
@@ -372,3 +373,4 @@ None. This skill follows the standard required slots, the small-aggregate rule (
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Self-compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions; applied active voice and lead sentences throughout; added Revision History | Skills team | Skills maintainer |
 | 2 | 2026-07-20 | IDDD layer: added Snapshot, Quick Reference table (labeled projection), Related Skills with typed relationships + Translation notes, Examples in Given/When/Expect, Environment Adapter, Deviations; expanded Definitions; renamed announce verb to match name; renamed Step 5 / Step 6 headings to work-speak; added ≥2 motivating scenarios per Never/Always rule; delegated test-verification protocol to `verification-before-completion` by name | Skills team | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

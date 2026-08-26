@@ -1,6 +1,7 @@
 ---
 name: requesting-code-review
 description: Use when a task is completed or about to be merged; fires the moment unreviewed work would cascade defects into the next task, before the agent proceeds, merges, or builds on top of it
+type: sub-skill
 ---
 
 # Requesting Code Review
@@ -27,10 +28,10 @@ This skill dispatches a code reviewer subagent against a committed git range so 
 
 | Sibling skill | Relationship | What this skill uses from it |
 |---|---|---|
-| `receiving-code-review` | `none` / `conformist` | This skill *requests*; that skill *receives* the same feedback shape. Adopt its severity vocabulary (Critical/Important/Minor) wholesale so the two compose without translation. |
 | `subagent-driven-development` | `upstream` | SDD invokes this skill at the end of each task for the whole-branch review. Translation: SDD passes the task framing and the per-task SHAs; this skill treats them as the BASE_SHA/HEAD_SHA contract and the description. |
 | `executing-plans` | `upstream` | Invokes this skill at natural plan checkpoints. Translation: executing-plans hands the completed checkpoint's commit range and the plan section as requirements; this skill maps them to BASE_SHA/HEAD_SHA and PLAN_OR_REQUIREMENTS. |
 | `verification-before-completion` | `shared-kernel` | Both enforce "evidence before a success claim." Shared terms: verify, evidence, claim. Flag both revision histories if either changes the definition of "verified." |
+| `receiving-code-review` | `none` / `conformist` | This skill *requests*; that skill *receives* the same feedback shape. Adopt its severity vocabulary (Critical/Important/Minor) wholesale so the two compose without translation. |
 
 ## Document Metadata
 
@@ -247,3 +248,4 @@ No structural rules from the IDDD layer were broken in this revision. The dispat
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions; active voice and lead sentences throughout; Revision History | Skills team | Skills maintainer |
 | 2 | 2026-07-20 | IDDD layer: added Snapshot, Quick Reference (projection), Related Skills with typed relationships, Translation notes at upstream refs, Public Interface for Composition, Deviations note; rewrote `description` as a specific trigger naming the cascade failure mode; added announce line; renamed "Overview"→"Request the Review Early"; labeled quick-reference table as projection; converted the example to Given/When/Expect; added second motivating scenario to each mandatory When-to-Request rule; replaced inline template reference with path + one-line purpose; added Cost/Benefit line | Skills team | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

@@ -1,6 +1,7 @@
 ---
 name: technical-writing
 description: Use when writing, structuring, reviewing, or revising technical documentation — SOPs, work instructions, API docs, runbooks, user guides, tutorials, reference docs, error messages, deviation/CAPA/RCA reports, or any document whose primary purpose is to communicate technical or procedural information accurately to a defined audience. Symptoms include being asked to "just write a quick SOP/README", being told "don't overthink it", writing docs under audit or deadline pressure, or noticing the document mixes facts with opinions, leaves Effective Date as TBD, invents API shapes from a signature alone, or cites "applicable regulations" without clause numbers.
+type: sub-skill
 ---
 
 # Technical Writing
@@ -268,3 +269,4 @@ Each of these means: stop, apply the four required slots, cite clauses, flag unk
 | 5 | 2026-07-19 | Terminology and visuals compliance: added Definitions section (SOP, RCA, CAPA, API, DDD, 5W1H, Diátaxis, Ishikawa, GMP, TBD); numbered caption on Figure 1; split 35-word sentence; parallelized Core Pattern list | Skills team | Skills maintainer |
 | 6 | 2026-07-19 | Style §2: split the 3-comma sentences in Core Principle and Domain Model (parenthetical lists → em-dash apposition or separate sentence) | Skills team | Skills maintainer |
 | 7 | 2026-08-20 | Added Developer Documentation Style bounded context (supporting) + `reference/dev-doc-style.md` capturing Google dev docs style guide SOTA; added 3 Definitions (Sentence case, Oxford comma, Cross-reference); added routing rule (dev audience → Google rules active; regulated audience → SOP priority); updated Domain Model digraph with DevStyle node | Skills maintainer | Skills maintainer |
+| 8 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

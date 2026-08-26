@@ -1,6 +1,7 @@
 ---
 name: documenting-codebases
 description: Use when an existing codebase has no architecture documentation, or its current diagrams no longer match the code — undocumented architecture decays faster than diagrams can track, so the writer must read the code and regenerate C4 + BPMN PlantUML artifacts before onboarding, audits, ADRs, or post-refactoring reviews proceed on stale assumptions.
+type: sub-skill
 ---
 
 # Documenting Codebases
@@ -27,8 +28,8 @@ This skill turns a previously-undocumented codebase into a durable, reviewable a
 
 | Sibling | Relationship | Why |
 |---|---|---|
-| `writing-skills` | `downstream` | This skill is a documentation skill that `writing-skills`' TDD-for-skills process would pressure-test; its SKILL.md is a candidate for `writing-skills` micro-tests. |
 | `technical-writing` | `shared-kernel` | Both define document structure and co-maintain the Definitions/audience/scope overlap. Flag both revision histories when the shared terms change. |
+| `writing-skills` | `downstream` | This skill is a documentation skill that `writing-skills`' TDD-for-skills process would pressure-test; its SKILL.md is a candidate for `writing-skills` micro-tests. |
 | `brainstorming` | `none` | Documentation of an existing codebase is descriptive, not creative ideation; do not chain `brainstorming` before this skill. |
 
 **Translation notes:**
@@ -376,3 +377,4 @@ The writer finds the following files in this skill:
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Initial self-compliance rewrite: added Document Metadata, Audience, Purpose/Scope (with "does NOT cover"), Definitions (C4, BPMN, ADR, PlantUML, PUML), active voice throughout, numbered caption on Figure 1, Revision History | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-20 | IDDD-layer rewrite (additive to technical-writing): added Snapshot (≤200 words), Quick Reference table, Related Skills with typed relationships (`writing-skills` downstream, `technical-writing` shared-kernel, `brainstorming` none) + Translation notes, Worked Example in Given/When/Expect form with a second motivating scenario, Rules and Motivating Scenarios section; rewrote `description` to name the concrete failure mode (undocumented architecture decays faster than diagrams can track); added imperative announce line whose verb matches the skill name; renamed generic headings (Overview → Documentation Approach, Output Convention → Output Artifacts, Common Mistakes → Failure Modes and Corrections); labeled all quick-reference/projection tables "(projection — see Workflow for full rules)"; replaced inline reference-file content with path + purpose references; bumped Revision to 2. **Deviations:** none — all IDDD structural rules applied without exception. | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

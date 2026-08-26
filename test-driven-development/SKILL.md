@@ -1,6 +1,7 @@
 ---
 name: test-driven-development
 description: Use when implementing any feature or bugfix and the writer is tempted to write implementation before the test — code written before the test passes immediately and proves nothing (it may test the wrong thing, test implementation not behavior, or miss forgotten edge cases); this skill forces a failing test first and forbids production code without one.
+type: sub-skill
 ---
 
 # Test-Driven Development (TDD)
@@ -46,8 +47,8 @@ The writer deletes any code written before its test, without keeping it as "refe
 
 | Skill | Relationship | What this skill uses from it / gives to it |
 |---|---|---|
-| `systematic-debugging` | downstream | Phase 4 step 1 delegates the failing-test write to this skill |
 | `verification-before-completion` | shared-kernel | Both enforce "watch it fail / prove it works"; co-maintain the verify vocabulary — flag both revision histories when the verify-step wording changes |
+| `systematic-debugging` | downstream | Phase 4 step 1 delegates the failing-test write to this skill |
 | `writing-skills` | downstream | Applies this skill's Red-Green-Refactor cycle to skills themselves (RED-GREEN-REFACTOR for documentation) |
 | `subagent-driven-development` | downstream | Implementer subagents follow this skill per task |
 | `executing-plans` | downstream | Plan steps that include a "write the failing test" step invoke this skill |
@@ -538,3 +539,4 @@ No structural rules from the IDDD spec were broken in this revision. If a future
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions; lead sentences on all lists; active voice throughout; Figure 1 caption; Revision History | Skills team | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer: added Snapshot, Quick Reference (DTO), Related Skills with typed relationships + translation notes, Public Interface for Composition, Environment Adapter, Deviations note, Given/When/Expect framing on the Bug Fix example; rewrote `description` as a specific trigger naming the failure mode (code-first passes immediately and proves nothing); added announce line; renamed Overview → Write The Test First; added two motivating scenarios to the core principle; labeled Good Tests / Common Rationalizations / When Stuck tables as projections; replaced the inline testing-anti-patterns bullet list with a path reference + one-line purpose; added Production code / Minimal code / Rationalization / Regression / Mock to Definitions; delegated the bug root-cause hunt to `systematic-debugging` by name; abstracted test commands behind the AGENTS.md-first Environment Adapter | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

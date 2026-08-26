@@ -1,6 +1,7 @@
 ---
 name: executive-summary
 description: Déclencher quand l'utilisateur cherche à rédiger l'executive summary, le résumé opérationnel, le sommaire de gestion, ou le résumé de son business plan de création d'entreprise. Produit un résumé narratif 1-2 pages en 8 paragraphes, adapté au destinataire. Mode draft (BP incomplet: placeholders narratifs qualitatifs, pas de balises techniques) ou mode final (BP complet). Détecte le mode via `bp_sections` dans `projet-state.json`.
+type: sub-skill
 ---
 
 # Executive summary
@@ -25,11 +26,11 @@ Produit un executive summary narratif 1-2 pages en 8 paragraphes, adapté au des
 | Skill | Relation | Rôle |
 |---|---|---|
 | `business-plan-redaction` | `upstream` | Invoque ce skill pour la section 1 du BP |
+| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 | `previsions-financieres-demarrage` | `downstream` | En mode draft, route vers ce skill si BP incomplet |
 | `plan-financement-durable` | `downstream` | En mode draft, route vers ce skill |
 | `tresorerie-bfr` | `downstream` | En mode draft, route vers ce skill |
 | `seuil-rentabilite` | `downstream` | En mode draft, route vers ce skill |
-| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 
 ## Document Metadata
 
@@ -148,3 +149,4 @@ Règles draft mode:
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: executive summary draft/final + placeholders narratifs (pas punitifs) + state-tool. | elarif | elarif |
+| 2 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés par catégorie selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

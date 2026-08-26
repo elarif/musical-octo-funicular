@@ -1,6 +1,7 @@
 ---
 name: subagent-driven-development
 description: Use when a written implementation plan with mostly-independent tasks must be executed in the current session — prevents the failure mode where executing the multi-task plan in one context pollutes the controller's context with task-by-task detail, loses task boundaries between implementer and reviewer, and silently drops tasks that failed mid-flight
+type: orchestrator
 ---
 
 # Subagent-Driven Development
@@ -34,13 +35,13 @@ This skill is a saga: it tracks every dispatched subagent (implementer, task-rev
 |---|---|---|
 | `writing-plans` | `upstream` | Produces the plan file this skill executes. |
 | `using-git-worktrees` | `upstream` | Ensures an isolated workspace before execution begins. |
-| `executing-plans` | `none` (alternative) | Same plan-consumption contract, no subagent dispatch. |
+| `using-superpowers` | `upstream` (composer) | Composes this skill as a sub-skill; see Public Interface for Composition. |
 | `requesting-code-review` | `downstream` | Provides the final whole-branch reviewer template. |
 | `receiving-code-review` | `downstream` | The task-reviewer and fix-subagents follow this protocol on findings. |
 | `test-driven-development` | `downstream` | Implementer and fix-subagents follow TDD for each task. |
 | `finishing-a-development-branch` | `downstream` | Consumed at the natural completion checkpoint. |
+| `executing-plans` | `none` (alternative) | Same plan-consumption contract, no subagent dispatch. |
 | `dispatching-parallel-agents` | `conformist` | Overlapping dispatch pattern; this skill is sequential per-task, that one is parallel across independent problems. |
-| `using-superpowers` | `upstream` (composer) | Composes this skill as a sub-skill; see Public Interface for Composition. |
 
 **Choice criterion — `subagent-driven-development` vs `executing-plans`:** Use this skill when the platform supports subagents and the plan's tasks are independent enough that one fresh context per task keeps the controller's coordination context clean. Use `executing-plans` when subagents are unavailable, when tasks must run strictly sequentially in one context, or when the plan is small enough that in-session execution does not pollute the orchestrator. The two are `none` (alternatives), not `upstream`/`downstream` of each other — pick one per run, do not chain.
 
@@ -564,3 +565,4 @@ The controller chooses the alternative workflow when the conditions differ:
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions, numbered figure captions, lead sentences on lists, active voice throughout, Revision History | Skills team | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer: added Snapshot, Quick Reference (projection), Related Skills with typed relationships + Translation notes, Idempotency line, Definitions expanded, Dispatch Command shape (LA.1), Enrichment checklist (L13.7), Versioning output artifacts (LA.2), Transaction sprawl warning (L12.5), Run ID for final review (L4.6), Workflow ledger subsection (L13.6), Public interface for composition (L13.4), Deviations note; rewrote `description` as specific trigger naming failure mode; renamed Example Workflow announce line to imperative verb matching name; added Given/When/Expect worked example; labeled quick-reference as projection; added ≥2 scenarios to the model-explicit rule; replaced inline reference-file references with path + one-line purpose (Repository index); preserved both dot flowcharts and all preserved sections | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

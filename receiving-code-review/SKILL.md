@@ -1,6 +1,7 @@
 ---
 name: receiving-code-review
 description: Use when code review feedback arrives and the agent must decide whether to implement it — prevents performative agreement that ships unverified changes
+type: sub-skill
 ---
 
 # Code Review Reception
@@ -25,9 +26,9 @@ description: Use when code review feedback arrives and the agent must decide whe
 
 | Sibling | Relationship | Translation (what arrives → what this skill calls it) |
 |---|---|---|
-| `requesting-code-review` | `conformist` — this skill receives what that skill produces; same team, adopts its review-item vocabulary wholesale | No translation: shared review vocabulary (review item, feedback, pushback). This skill speaks the same terms. |
-| `subagent-driven-development` | `downstream` — SDD's task-review step invokes this skill's Response Pattern when reviewing a subagent's output | Inbound: a task-review event. This skill calls it a "review item" and applies the 6-step protocol. |
 | `verification-before-completion` | `shared-kernel` — both enforce "evidence before claims"; co-maintain the verification vocabulary (verify, check, evidence) | Shared terms: "verify", "evidence". Changes require flagging both revision histories. |
+| `subagent-driven-development` | `downstream` — SDD's task-review step invokes this skill's Response Pattern when reviewing a subagent's output | Inbound: a task-review event. This skill calls it a "review item" and applies the 6-step protocol. |
+| `requesting-code-review` | `conformist` — this skill receives what that skill produces; same team, adopts its review-item vocabulary wholesale | No translation: shared review vocabulary (review item, feedback, pushback). This skill speaks the same terms. |
 
 *Cap: 3 of ~10 entries. Informal map, not a formal taxonomy — keep current over complete.*
 
@@ -330,3 +331,4 @@ No performative agreement. Technical rigor always.
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Initial technical-writing-compliant rewrite: added Document Metadata, Audience, Purpose/Scope (with "does NOT cover"), Definitions (YAGNI), active voice throughout, lead sentences on all lists, Revision History | Skills team | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer: added Snapshot, Quick Reference (projection-labeled), Related Skills (typed: conformist/downstream/shared-kernel + Translation notes), Public Interface for Composition; rewrote `description` to name the failure mode (performative agreement ships unverified changes); added announce line; renamed generic headings (Overview→Reception Discipline, Common Mistakes→projection, The Bottom Line→Reception Discipline); converted one Real Example to Given/When/Expect; expanded Definitions to cover Review item/Pushback/Performative agreement; cited ≥2 motivating scenarios for Always/When rules (Forbidden Responses, When To Push Back); labeled projections. Deviations: none — no structural rules broken. | Skills team | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

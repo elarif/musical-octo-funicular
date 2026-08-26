@@ -1,6 +1,7 @@
 ---
 name: using-superpowers
 description: Use when starting any conversation, before any response or action — fires a skill check so the agent loads the relevant skill first, preventing the failure mode where the agent proceeds without loading a relevant skill and re-derives the correct behavior ad hoc.
+type: orchestrator
 ---
 
 <SUBAGENT-STOP>
@@ -231,3 +232,4 @@ No structural rules from the IDDD layer are broken in this revision. If a future
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Technical-writing compliance rewrite: added Document Metadata, Audience, Purpose/Scope (with "does NOT cover"), Definitions; converted prose to active voice and present tense; added lead sentences before every list; added Revision History | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-20 | IDDD-layer rewrite: added Snapshot, Quick Reference (labeled projection), Related Skills with typed relationships + translation notes, Role: Service-Factory subsection (L11.4), Process (split god-method into 4 intent-revealing steps), Examples in Given/When/Expect form, Idempotency line (L13.5), Public Interface for Composition (L13.4), Deviations note (L10.7); rewrote `description` to name the failure mode (L1.5, L8.1); converted reference files to path + one-line purpose (L12.1); added "Always" rule motivating scenarios (L10.5); labeled quick-reference and Related-Skills tables as projections (LA.3) | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |

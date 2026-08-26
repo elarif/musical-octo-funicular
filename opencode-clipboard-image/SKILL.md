@@ -1,6 +1,7 @@
 ---
 name: opencode-clipboard-image
 description: Save clipboard images to a timestamped file and return a ready-to-paste path for OpenCode (Linux-first, X11/Wayland aware).
+type: sub-skill
 ---
 
 # OpenCode Clipboard Image
