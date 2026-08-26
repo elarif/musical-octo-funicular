@@ -1,6 +1,7 @@
 ---
 name: writing-plans
 description: Use when the writer has a spec or requirements for a multi-step task and has not yet produced a task-by-task plan — implementing a multi-step task without a plan produces inconsistent, unreviewable work that an engineer cannot execute first-time-right
+type: orchestrator
 ---
 
 # Writing Plans
@@ -37,9 +38,9 @@ This skill turns a design spec or requirements list into a complete, placeholder
 | Sibling | Relationship | What crosses the boundary |
 |---|---|---|
 | `brainstorming` | upstream | brainstorming produces a design spec; this skill consumes it as the input requirements |
+| `test-driven-development` | shared-kernel | plans use TDD steps; co-maintain TDD/RED/GREEN vocabulary |
 | `subagent-driven-development` | downstream | this skill produces a task-by-task plan file; SDD consumes it as the execution script |
 | `executing-plans` | downstream | alternative executor; consumes the same plan file as an inline batch script |
-| `test-driven-development` | shared-kernel | plans use TDD steps; co-maintain TDD/RED/GREEN vocabulary |
 
 **Translation notes:**
 
@@ -292,3 +293,4 @@ None. No structural rule from the IDDD layer was broken for this skill. If a fut
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Self-compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions, and Revision History; applied active voice, lead sentences, and parallel lists throughout | Skills team | Skills maintainer |
 | 2 | 2026-07-20 | IDDD-layer rewrite: added Snapshot, Quick Reference (labeled projection), Related Skills with typed relationships + Translation notes, Public Interface for Composition, Deviations note; refactored description to name the failure mode; renamed announce verb to match the skill name; added RED/GREEN/Plan to Definitions; replaced sibling-skill prose with `name` references. Preserved all code blocks, the Plan Document Header and Task Structure templates, the file path references, and the technical-writing layer. | Skills team | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
