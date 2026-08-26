@@ -1,6 +1,7 @@
 ---
 name: plan-financement-durable
 description: Déclencher quand l'utilisateur cherche le plan de financement (initial ou à 3 ans), les besoins/ressources durables, ou veut vérifier l'équilibre financier au lancement d'un projet de création d'entreprise (commerce, service, production ou SaaS/digital). Construit le tableau initial (jour zéro) et la projection 3 ans (N/N+1/N+2), distingue CapEx/OpEx pour SaaS, gère la TVA déductible sur investissements initiaux, et traite les feedback loops de trésorerie négative.
+type: sub-skill
 ---
 
 # Plan de financement durable
@@ -24,12 +25,12 @@ Construit le plan de financement initial (jour zéro) et la projection à 3 ans 
 
 | Skill | Relation | Rôle |
 |---|---|---|
-| `tresorerie-bfr` | `downstream` + `feedback` | Calcule le BFR consommé ici; émet les alertes de solde négatif traitées ici |
 | `previsions-financieres-demarrage` | `upstream` | Orchestrateur qui invoque ce skill pour Q1 (capitaux) et Q5 (pérennité 3 ans) |
 | `business-plan-redaction` | `upstream` | Invoque ce skill pour la partie financière du BP |
-| `seuil-rentabilite` | `none` | Separate Ways |
-| `executive-summary` | `downstream` | Consomme les données de financement en mode final |
 | `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
+| `tresorerie-bfr` | `downstream` + `feedback` | Calcule le BFR consommé ici; émet les alertes de solde négatif traitées ici |
+| `executive-summary` | `downstream` | Consomme les données de financement en mode final |
+| `seuil-rentabilite` | `none` | Separate Ways |
 
 ## Document Metadata
 
@@ -166,3 +167,4 @@ Persister dans `scenarios.*` via `state-tool.sh`. Arrays pluriannuels [3] calcul
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: plan financement initial + 3 ans + CapEx/OpEx SaaS + TVA déductible + feedback loop + state-tool. | elarif | elarif |
+| 2 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés par catégorie selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
