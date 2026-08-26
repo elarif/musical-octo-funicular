@@ -1,6 +1,7 @@
 ---
 name: verification-before-completion
 description: Use when about to claim work is complete, fixed, or passing, or before committing, pushing, or creating a pull request. Prevents the failure mode of shipping defects by asserting completion without first running fresh verification evidence and reading its full output.
+type: sub-skill
 ---
 
 # Verification Before Completion
@@ -293,3 +294,4 @@ This is non-negotiable.
 |---|---|---|---|---|
 | 1 | 2026-07-19 | Self-compliance rewrite: added Document Metadata, Audience, Purpose/Scope, Definitions, Revision History; converted prose to active voice; added lead sentences to all lists; preserved Iron Law, Gate Function, Common Failures, Red Flags, Rationalization Prevention, Key Patterns, Why This Matters, When To Apply, Bottom Line | Skills maintainer | Skills maintainer |
 | 2 | 2026-07-19 | IDDD layer applied (additive over technical-writing). A1 Snapshot; A2 Quick Reference table; A3 Related Skills with typed relationships (shared-kernel: test-driven-development, systematic-debugging; downstream: subagent-driven-development, executing-plans, finishing-a-development-branch); A4 Translation notes at cross-skill refs; A7 Public Interface for Composition; A8 Environment Adapter note; A9 Deviations note. B1 description rewritten to name the failure mode; B2 announce line added; B3 Overview→Core Principle; B5 Worked Example as Given/When/Expect; B6 projection labels on quick-reference tables; B7 sibling prose referenced by name only; B9 two motivating scenarios per "always" rule. C1 Definitions expanded (claim, verification evidence, fresh evidence, verified claim, actual status, rationalization); C5 four required slots preserved and consistent; C6 tool names already abstract roles, adapter note added; C7 trigger→actions stays inside this skill's territory. `name` unchanged. | Skills maintainer | Skills maintainer |
+| 3 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
