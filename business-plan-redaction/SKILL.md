@@ -1,6 +1,7 @@
 ---
 name: business-plan-redaction
 description: Déclencher quand l'utilisateur cherche à faire ou rédiger son business plan, son plan d'affaires, ou la structure de son business plan de création d'entreprise. Structure le BP en 8 sections (executive summary, équipe, projet, économique, financière, juridique, sommaire, documentaire), adapte le ton au destinataire, invoque les skills 1-4 pour la partie financière et le skill 6 pour l'executive summary, applique les caractéristiques d'un bon BP et évite les 11 erreurs courantes.
+type: orchestrator
 ---
 
 # Business plan — rédaction
@@ -25,11 +26,11 @@ Structure le business plan en 8 sections, adapte le ton au destinataire (investi
 | Skill | Relation | Rôle |
 |---|---|---|
 | `previsions-financieres-demarrage` | `downstream` + `upstream` (chaînage) | Invoqué pour la partie financière (orchestrateur); ce skill le propose en pré-check si le state est vide |
+| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 | `plan-financement-durable` | `downstream` | Invoqué pour la partie financière |
 | `tresorerie-bfr` | `downstream` | Invoqué pour la partie financière |
 | `seuil-rentabilite` | `downstream` | Invoqué pour la partie financière |
 | `executive-summary` | `downstream` | Invoqué pour la section 1 (rédigé en dernier) |
-| `technical-writing` | `shared-kernel` | Co-maintient Document Metadata, Audience, Definitions |
 
 ## Document Metadata
 
@@ -129,3 +130,4 @@ Voir `_shared/bpifrance-finance-glossary.md`. Termes centraux: Business plan, Ex
 |---|---|---|---|---|
 | 1 | 2026-08-06 | Initial: business plan 8 sections + adaptation destinataire + 11 erreurs + alertes + state-tool. | elarif | elarif |
 | 2 | 2026-08-06 | Pré-check (étape 0) proposant `previsions-financieres-demarrage` si state vide + Related Skills mis à jour (chaînage bidirectionnel). | elarif | elarif |
+| 3 | 2026-08-26 | Sweep typologie IDDD : ajout frontmatter type, réordonnancement Skills associés par catégorie selon _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
