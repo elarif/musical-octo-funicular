@@ -1,0 +1,3 @@
+_shared/evals/*.log
+!_shared/evals/.gitkeep
+!_shared/evals/README.md
