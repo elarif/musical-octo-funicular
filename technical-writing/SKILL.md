@@ -6,13 +6,21 @@ type: sub-skill
 
 # Technical Writing
 
+## Snapshot
+
+Technical writing IS the discipline that makes documents survive review and audit. Covers SOPs, work instructions, API docs, runbooks, user guides, tutorials, reference docs, error messages, deviation/CAPA/RCA reports — any document whose primary purpose is to communicate technical or procedural information accurately to a defined audience.
+
+This skill owns: (1) a 5-phase workflow (Plan → Structure → Draft → Review → Publish) — skipping any phase produces a document that fails; (2) 4 required slots every document must fill (Audience, Purpose/Scope, Definitions, Revision History); (3) the Iron Rule (no skipping phases); (4) a banned vague-words list (soon, ASAP, appropriate, properly, etc. — replace with concrete bounds); (5) regulation citation rules (regulation + clause + paragraph, never "applicable regulations"); (6) hallucination prohibition for API/reference docs (never invent shapes from signatures alone).
+
+**Announce when starting any technical documentation task:** "I'm using the technical-writing skill to draft|structure|review|revise this <document type>."
+
 ## Document Metadata
 
 | Field | Value |
 |---|---|
 | Document ID | `SKILL-TW-001` |
-| Revision | 7 |
-| Effective Date | 2026-07-19 |
+| Revision | 9 |
+| Effective Date | 2026-08-26 |
 | Owner | Skills maintainer |
 | Approver | Skills maintainer |
 | Doc type | Skill reference |
@@ -66,6 +74,15 @@ The writer defines every acronym and term on first use. This section collects th
 | Sentence case | Capitalize only the first word of a heading or title, plus proper nouns |
 | Oxford comma | Comma before the final item in a list of 3+ items (optional but must be consistent within a document) |
 | Cross-reference | Descriptive link whose anchor text identifies the target by name or topic |
+
+## Related Skills
+
+| Sibling | Relationship | What crosses the boundary |
+|---|---|---|
+| `writing-skills` | shared-kernel | Co-maintain Definitions block + 4 required slots (Audience, Purpose/Scope, Definitions, Revision History). Writing-skills is TDD-for-skills; this skill is template-rules-for-docs. Changes to slot shapes flagged in both revision histories. |
+| `brainstorming` | upstream | Brainstorming gate may produce a design spec with documentation requirements. This skill consumes those as Purpose/Scope content. Translation: brainstorming's "spec section" = this skill's "document to slot-fill." |
+| `documenting-codebases` | downstream | Architecture documentation skill. Consumes this skill's 4-slot discipline for C4/BPMN artifacts. |
+| `kibana-prod-investigation` | downstream | Investigation reports follow this skill's structure. |
 
 ## When to Use
 
@@ -270,3 +287,25 @@ Each of these means: stop, apply the four required slots, cite clauses, flag unk
 | 6 | 2026-07-19 | Style §2: split the 3-comma sentences in Core Principle and Domain Model (parenthetical lists → em-dash apposition or separate sentence) | Skills team | Skills maintainer |
 | 7 | 2026-08-20 | Added Developer Documentation Style bounded context (supporting) + `reference/dev-doc-style.md` capturing Google dev docs style guide SOTA; added 3 Definitions (Sentence case, Oxford comma, Cross-reference); added routing rule (dev audience → Google rules active; regulated audience → SOP priority); updated Domain Model digraph with DevStyle node | Skills maintainer | Skills maintainer |
 | 8 | 2026-08-26 | IDDD typology sweep: added type frontmatter, reordered Related Skills by category per _shared/SKILL-ARCH.md | Skills maintainer | Skills maintainer |
+| 9 | 2026-08-26 | IDDD layer completion: added Snapshot, Related Skills typed-relationships table, Public Interface for Composition per writing-skills template | Skills maintainer | Skills maintainer |
+
+## Public Interface for Composition
+
+This skill IS a sub-skill: any parent (e.g., `using-superpowers`, `business-plan-redaction`, `documenting-codebases`, a custom orchestration skill) that writes, structures, reviews, or revises technical documentation must invoke it. The interface below is the published contract; everything else in this file is private implementation.
+
+**What a parent may invoke:**
+
+- The announce line: `"I'm using the technical-writing skill to draft|structure|review|revise this <document type>."`
+- The 4 required slots structure: Audience, Purpose/Scope, Definitions, Revision History.
+- The Iron Rule: no skipping phases (Plan → Structure → Draft → Review → Publish).
+- The 5-phase workflow.
+
+**What a parent expects back:** a validated technical document (SOP, work instruction, runbook, user guide, API reference, tutorial, error message, deviation/RCA/CAPA report) with:
+
+- All 4 required slots filled (no TBD, no placeholders).
+- Zero banned vague words (soon, ASAP, appropriate, properly, etc.).
+- Citations with regulation + clause + paragraph (e.g., `21 CFR 211.22(a)`) when regulatory.
+- No hallucinated API shapes or cross-references to nonexistent documents.
+- Active voice, present tense, concrete bounds throughout.
+
+**Stable contract:** Only this section, frontmatter description, and announce line are public. Section names, examples, reference files may change between revisions.
