@@ -6,6 +6,10 @@ type: sub-skill
 
 # OpenCode Clipboard Image
 
+## Snapshot
+
+This skill owns one job: save clipboard image to timestamped file on Linux, return absolute path for pasting into OpenCode chat. X11 uses `xclip`, Wayland uses `wl-paste`. Auto-detect session via `$XDG_SESSION_TYPE`. Output dir: `~/Pictures/opencode/clip-YYYYMMDD-HHMMSS.<ext>`. Announce: "I'm using the opencode-clipboard-image skill to save this clipboard image."
+
 ## Purpose
 
 Automate the common flow where pasting an image into terminal chat does not work: extract image data from the clipboard, save it to a file, and provide a path the user can reference in OpenCode.
@@ -109,3 +113,27 @@ If the clipboard has no image MIME type, respond with:
 - Do not delete or overwrite existing files.
 - Use timestamped filenames only.
 - Never assume root/sudo access; provide install command if dependency is missing.
+
+## Document Metadata
+
+| Field | Value |
+|---|---|
+| Document ID | `SKILL-OCI-001` |
+| Revision | 2 |
+| Effective Date | 2026-08-26 |
+| Owner | Skills maintainer |
+| Doc type | Skill reference |
+
+## Related Skills
+
+| Sibling | Relationship | What crosses the boundary |
+|---|---|---|
+| `using-superpowers` | upstream | Routes clipboard-image user requests to this skill. |
+| `opencode/*` skills family | none | Cross-repo; those live under `~/.config/opencode/skills/` and serve a different style contract (minimal by design). |
+
+## Revision History
+
+| Rev | Date | Description | Author | Approver |
+|---|---|---|---|---|
+| 1 | 2026-07-19 | Initial minimal skill | Skills maintainer | Skills maintainer |
+| 2 | 2026-08-26 | IDDD layer minimal completion: Snapshot, Document Metadata, Related Skills, Revision History. Phase 2 sweep added `type: sub-skill` frontmatter earlier same day. | Skills maintainer | Skills maintainer |
