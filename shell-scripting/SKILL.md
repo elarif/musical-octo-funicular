@@ -112,6 +112,75 @@ x=$(cmd)          # now $? reflects cmd's exit code
 - `<<'EOF'` quoted delimiter — literal text, no expansion. Use for code or secrets: password variables inside stay literal.
 - `<<EOF` unquoted — `$var` and `$(cmd)` expand. Use deliberately, never by accident.
 
+## C. Modern Idioms 2026
+
+Use these when target bash is ≥ 4.4 (default on any modern distro, macOS via Homebrew `brew install bash`).
+
+**Conditionals — `[[ ]]` not `[ ]`:**
+
+- `[[ -f "$file" ]]` — test builtin with no word splitting, pattern matching, safer operators
+- `[[ "$a" == "$b" ]]` — string equality
+- `[[ "$n" -gt 7 ]]` — numeric comparison (`-gt`, not `>` — `>` inside `[[ ]]` is locale-dependent string compare, classic bug)
+- `[[ "$s" =~ ^[0-9]+$ ]]` — regex match
+- Never use `[ ]` in new bash code. `[ "$var" = "x" ]` breaks on unset var and looks POSIX-by-accident.
+
+**Arithmetic — `(( ))` not `let`:**
+
+- `(( count++ ))` — increment
+- `(( total = a + b * 2 ))` — arithmetic assignment
+- `if (( n > 10 )); then` — numeric condition
+- Trap: `(( i++ ))` returns exit status 1 when i=0 → kills `set -e` scripts. Use `: $(( i++ ))` or `(( ++i ))` (pre-increment never returns 0).
+
+**Bash 5.3 forkless command substitution (2025):**
+
+```bash
+result=${ cmd; }       # runs in current shell, no fork, no subshell-loss of state
+output=${| cmd; }      # same for pipelines
+```
+
+Fallback when bash < 5.3 or unclear: stick with `result=$( cmd )` — universally supported.
+
+**Reading into arrays — `mapfile`:**
+
+```bash
+mapfile -t lines < input.txt           # replaces while-read loop
+mapfile -t files < <( find . -name '*.log' -print0 | tr '\0' '\n' )
+```
+
+**NUL-delimited safe read (filenames with spaces/newlines):**
+
+```bash
+while IFS= LC_ALL=C read -r -d '' f; do
+  do_something "$f"
+done < <( find . -type f -print0 )
+```
+
+**Process substitution — `<( cmd )` and `>( cmd )`:**
+
+- `<( cmd )` — capture cmd stdout as file descriptor (fd) without subshell for while loop
+- `>( cmd )` — pipe into cmd stdin
+- Use to avoid `cmd | while read` subshell-loss trap: `while read ... done < <( cmd )` preserves variable mutations.
+
+**Name references (bash 4.3+):**
+
+```bash
+declare -n ref=actual_var    # ref is alias to actual_var
+ref="new value"              # modifies actual_var
+```
+
+Use for: passing arrays by name to functions (`local -n arr_ref="$1"`).
+
+**Associative arrays (bash 4+):**
+
+```bash
+declare -A config
+config[host]="example.com"
+config[port]="443"
+for k in "${!config[@]}"; do echo "$k → ${config[$k]}"; done
+```
+
+**Timestamps (bash 5.0+):** `EPOCHSECONDS`, `EPOCHREALTIME` — use instead of `date +%s` forks.
+
 ## Scope Out — POSIX-sh
 
 This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
