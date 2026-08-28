@@ -204,6 +204,73 @@ Never emit, recommend, or leave unflagged any pattern on the left column. When y
 | No IFS=`read` for line splitting | `while IFS= read -r line` | Default IFS strips leading/trailing whitespace from line content. |
 | `set -e` alone as "strict mode" | Header from section A | `set -e` silently disabled in `$( )` without `inherit_errexit`. |
 
+## E. Error Handling and Traps
+
+**`trap` on `EXIT`, not per-signal lists:**
+
+```bash
+cleanup() {
+  # rm tempfiles, kill background jobs, release locks
+  rm -f -- "$tmpfile"
+}
+trap cleanup EXIT
+```
+
+`EXIT` covers: normal completion, error under `set -e`, explicit `exit N`, and most signals (INT, TERM) because bash converts them to exit. One trap, one cleanup function.
+
+**Inherit error traps into functions (bash 4.4+):**
+
+```bash
+set -E
+trap 'report_failure "line $LINENO: exit code $?"' ERR
+```
+
+Without `-E`, an `ERR` trap does not propagate into functions, command substitutions, or subshells. Pair with `inherit_errexit` (section A) for full coverage.
+
+**stderr logging helper (Google Shell Guide §3.1):**
+
+```bash
+err() {
+  printf '[%s] ERROR: %s\n' "$(date +%Y-%m-%dT%H:%M:%S%z)" "$*" >&2
+}
+```
+
+- Errors and diagnostics go to stderr (`>&2`), not stdout.
+- Never interleave user data on stdout with log lines.
+
+**Functions `return`, scripts `exit`:**
+
+- Function: `return 1` on failure, never `exit 1` (which kills whole process).
+- Top-level script only: `exit 0` / `exit 1`.
+
+**Detect failure portably:**
+
+```bash
+if ! do_thing; then
+  err "do_thing failed"
+  return 1
+fi
+```
+
+Avoid `do_thing || die "..."` chains — they hide the failing command's stderr and conflate "didn't run" with "failed".
+
+**Required var checks:**
+
+```bash
+: "${CONFIG_PATH:?CONFIG_PATH must be set}"
+```
+
+Fails fast with clear message if env var absent.
+
+**PS4 debug traces:**
+
+```bash
+PS4='+ ${BASH_SOURCE[0]}:${LINENO}: '
+set -x   # trace with file+line context
+```
+
+Then `set +x` to stop. Never commit scripts with `set -x` left enabled.
+
 ## Scope Out — POSIX-sh
 
 This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
