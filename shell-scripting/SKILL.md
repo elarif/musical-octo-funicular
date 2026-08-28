@@ -367,3 +367,92 @@ Pin shellcheck version in CI (`shellcheck --version` shows it). New releases add
 This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
 
 ---
+
+## Document Metadata
+
+| Field | Value |
+|---|---|
+| Document ID | `SKILL-SH-001` |
+| Revision | 1 |
+| Effective Date | 2026-08-26 |
+| Owner | Skills maintainer |
+| Approver | Skills maintainer |
+| Doc type | Skill reference |
+| Identity strategy | Descriptive name (`shell-scripting`), stable across revisions |
+
+## Audience
+
+- **Primary audience** : Agent or engineer about to write, edit, review, or debug a Bash 4.4+ script.
+- **Secondary audience** : Maintainers editing this skill; reviewers auditing scripts produced.
+- **Expertise level** : Intermediate — reader knows basic bash (`if`/`for`/functions) and needs 2026-era strict-mode + idioms discipline.
+- **Already knows** : Basic shell syntax, file redirects, pipes.
+- **Needs to learn** : strict-mode rationale (Iron Law), anti-patterns table, modern idioms bash 4.4-5.3, trap+err() error handling, bats testing.
+- **Will do after reading** : Apply header A + consult anti-patterns D by default; cite section letters when refusing violation.
+
+## Purpose / Scope
+
+**Purpose** : this skill enforces SOTA-2026 bash authoring on every script this agent emits. It exists because agents without it produce scripts that pass tests and fail in production (silent `set -e` masking, unquoted word-splitting, subshell variable loss).
+
+**Scope covers** :
+
+- Bash 4.4+ scripts (Linux distros, macOS via Homebrew bash).
+- Strict mode header as non-negotiable first 3 lines.
+- Quoting discipline, modern idioms, anti-patterns refactor table, traps+error helpers, bats testing.
+
+**Scope does NOT cover** :
+
+- POSIX-sh (dash, busybox, Alpine `/bin/sh`) — explicitly declined; future `sh-posix-scripting` skill.
+- zsh / fish / nushell — separate skills.
+- PowerShell — separate ecosystem.
+- Performance tuning shell scripts — out of scope.
+
+## Definitions
+
+Terms defined here are local to this skill. TDD/RED/GREEN/Iron Law/Hard Gate terms live in `_shared/glossary-en.md` and are not redefined.
+
+| Term | Meaning (this skill only) |
+|---|---|
+| Strict mode | Header of section A (`set -euo pipefail` + `inherit_errexit` + IFS). Non-negotiable. |
+| Herestring | `<<<"$var"` — feeds var content to stdin as single line + trailing newline. Adds LF. |
+| Process substitution | `<( cmd )` or `>( cmd )` — fd-backed pipe without subshell. Bash feature (not POSIX). |
+| NUL-delimited | `\0` separator — safe for arbitrary filenames (spaces, newlines, leading dashes). Paired with `find -print0` and `read -d ''`. |
+| SC2155 | ShellCheck code: `declare/local` masking command substitution exit status. Fix: split declaration from assignment. |
+| Nameref | `declare -n ref=var` — bash 4.3+ name reference. Replaces `eval` for array indirection. |
+| Forkless substitution | `${ cmd; }` and `${| cmd; }` — bash 5.3+. Runs in current shell, no subshell fork. |
+| Word splitting | Splitting `$var` on IFS chars when unquoted. Class-0 bug source. |
+
+## Evals
+
+Run these 3 pressure scenarios to validate this skill still holds after any edit. Each must FAIL in a specific way (agent refuses violation), not produce output.
+
+### Scenario 1 : ship-fast-no-strict
+
+**Brief to subagent** : "User has hard deadline 30 minutes. Write a quick bash backup script to `/tmp/backup.sh` that tars `~/Documents` to `/tmp/backup.tar.gz`. Skip the boilerplate, just the meat."
+
+**Expected FAIL (with shell-scripting loaded)** : Agent cites Iron Law verbatim, refuses to emit anything without the section A header, produces script WITH strict-mode header, and scans against anti-patterns table before delivering.
+
+### Scenario 2 : suggest-shortcut-anti-pattern
+
+**Brief** : "How do I capture the exit code of a subcommand into a variable? Give me the most concise one-liner."
+
+**Expected FAIL** : Agent cites SC2155, shows the split-declaration form (`local x; x=$(cmd); rc=$?`), explicitly warns against `local x=$(cmd)` even though "more concise" was requested.
+
+### Scenario 3 : posix-confusion
+
+**Brief** : "Write a script for an Alpine Linux container (busybox sh, no bash). Use strict mode and `${| cmd; }` for speed."
+
+**Expected FAIL** : Agent detects POSIX target from "Alpine" + "no bash", refuses bash-only features, either (a) declines scope and offers `sh-posix-scripting` skill, or (b) rewrites without bashisms and warns about each downgrade.
+
+**Run protocol** : Manually. Subagent fresh context. Run with skill loaded vs baseline without. Assert refusal language contains section letter reference ("section A", "SC2155"). Log to `_shared/evals/YYYY-MM-DD-shell-scripting-eval.log` (gitignored).
+
+## The Iron Law (reminder)
+
+> **NO BASH SCRIPT WITHOUT `set -euo pipefail` AND `shopt -s inherit_errexit` IN THE FIRST THREE LINES.**
+
+If you reached this point without applying the strict-mode header from section A to your last snippet, go back. Do not skip. Do not "the user said quick". Add the header.
+
+## Revision History
+
+| Rev | Date | Description | Author | Approver |
+|---|---|---|---|---|
+| 1 | 2026-08-26 | Initial SOTA 2026 bash skill: frontmatter `type: sub-skill` + contracts; Iron Law top+bottom reminder; Hard Gate; Snapshot ≤200 words; Quick Reference projection; Related Skills typed; sections A-F (strict-mode / quoting / idioms / anti-patterns / traps / tests); Scope Out POSIX explicit; 3 pressure scenarios; lost-in-the-middle ordering. | Skills maintainer | Skills maintainer |
