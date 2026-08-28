@@ -271,6 +271,97 @@ set -x   # trace with file+line context
 
 Then `set +x` to stop. Never commit scripts with `set -x` left enabled.
 
+## F. Tests and CI
+
+**Testable script pattern — `main()` + `BASH_SOURCE` guard:**
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s inherit_errexit 2>/dev/null || true
+IFS=$'\n\t'
+
+log_info() { printf 'INFO: %s\n' "$*"; }
+log_err()  { printf 'ERROR: %s\n' "$*" >&2; }
+
+do_work() {
+  local input="${1:?input required}"
+  # real work here
+}
+
+main() {
+  case "${1:-}" in
+    -h|--help)  grep '^# ' "$0"; exit 0 ;;
+    "")          log_err "missing argument"; exit 64 ;;  # EX_USAGE
+    *)           do_work "$1" ;;
+  esac
+}
+
+# Only run main when executed, not when sourced (allows unit tests to source)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi
+```
+
+Why: bats tests (and other scripts) can `source` this file to test functions individually, without triggering `main`.
+
+**bats-core test:**
+
+```bash
+#!/usr/bin/env bats
+
+setup() {
+  load 'test_helper/bats-support/load'
+  load 'test_helper/bats-assert/load'
+  source ./my-script.sh
+}
+
+@test "do_work fails without argument" {
+  run do_work ""
+  assert_failure
+  assert_output --partial "input required"
+}
+
+@test "do_work returns expected output on valid input" {
+  run do_work "hello"
+  assert_success
+  assert_output "HELLO"  # or whatever the contract is
+}
+```
+
+Run: `bats tests/`.
+
+**ShellCheck — pre-commit:**
+
+`.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.11.0
+    hooks:
+      - id: shellcheck
+        args: ["--severity=warning"]
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0
+    hooks:
+      - id: shfmt
+        args: ["-i", "2", "-ci", "-bn"]
+```
+
+shfmt flags: `-i 2` two-space indent (Google convention), `-ci` indent case, `-bn` binary ops at line start.
+
+**CI shellcheck snippet (GitHub Actions):**
+
+```yaml
+- name: Lint shell scripts
+  run: |
+    find . -name '*.sh' -not -path './.git/*' -print0 | \
+      xargs -0 shellcheck --severity=warning
+```
+
+Pin shellcheck version in CI (`shellcheck --version` shows it). New releases add new warnings — treat as upgrade events, not surprises.
+
 ## Scope Out — POSIX-sh
 
 This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
