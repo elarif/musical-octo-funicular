@@ -58,6 +58,60 @@ This skill owns the rules an agent applies when writing, editing, reviewing, or 
 | `_shared/glossary-en.md` | `shared-kernel` | TDD/RED/GREEN/Iron Law/Hard Gate terms live there; this skill references, never redefines. |
 | `test-driven-development` | `shared-kernel` | RED/GREEN/REFACTOR discipline applies to bats tests as to code. |
 
+## A. Strict Mode Header
+
+Every bash script this skill produces or approves starts with this exact header (lines 1-3):
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s inherit_errexit 2>/dev/null || true  # bash 4.4+; no-op on older
+IFS=$'\n\t'
+```
+
+**Why each line:**
+
+- `#!/usr/bin/env bash` — finds bash on PATH regardless of install location (works on NixOS, Homebrew, multi-distro).
+- `set -euo pipefail` — `-e` exit on first error, `-u` error on unset variable expansion, `-o pipefail` propagate pipeline failures.
+- `shopt -s inherit_errexit` — closes the bash trap: `set -e` is silently disabled inside `$( ... )` command substitution without it (ShellCheck SC2312 class). Requires bash 4.4+. Guarded `|| true` so older bash does not error out.
+- `IFS=$'\n\t'` — word-splits only on newline and tab; never space. Prevents the classic "filename with space" corruption.
+
+**Known exceptions (rare, must be justified in commit message):** (1) Embedded heredoc inside a Dockerfile `RUN` (no `shopt` available at parse time); (2) Makefile recipes where each line is a separate shell. Document any other exception in a comment at the offending line.
+
+**Quoting escape hatch (bash 4.4+):** for safe serialization use `"${var@Q}"` which bash-escapes the value. Prefer it over hand-rolled `sed`-escapes.
+
+## B. Quoting Discipline
+
+**Always quote variable expansions.** `"$var"` — not `$var`. Word-splitting + glob expansion on unquoted expansion is the #1 shell bug class.
+
+**Arrays:**
+- Iterate array elements: `"${arr[@]}"` (each element as separate word, safe with spaces)
+- Never use `${arr[*]}` unquoted — joins with IFS then re-splits
+- Never use `$@` unquoted — always `"$@"`
+
+**Capture subcommand output safely** (fixes ShellCheck SC2155):
+
+```bash
+# ❌ WRONG — masks exit code of cmd
+local x
+x=$(cmd)          # but written as 'local x=$(cmd)' hides SC2155
+
+# ✅ CORRECT — declaration and assignment separated
+local x
+x=$(cmd)          # now $? reflects cmd's exit code
+```
+
+**Parameter expansion defaults:**
+
+- `${var:?message}` — abort if unset, with custom error (good for required config)
+- `${var:-default}` — use default if unset (does NOT mutate var)
+- `${var:+alternate}` — expand to alternate only if var is set (feature flags, verbosity)
+- `${#var}` — length of var (strlen equivalent)
+
+**Heredocs:**
+- `<<'EOF'` quoted delimiter — literal text, no expansion. Use for code or secrets: password variables inside stay literal.
+- `<<EOF` unquoted — `$var` and `$(cmd)` expand. Use deliberately, never by accident.
+
 ## Scope Out — POSIX-sh
 
 This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
