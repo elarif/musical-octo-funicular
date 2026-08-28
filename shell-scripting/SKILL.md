@@ -181,6 +181,29 @@ for k in "${!config[@]}"; do echo "$k → ${config[$k]}"; done
 
 **Timestamps (bash 5.0+):** `EPOCHSECONDS`, `EPOCHREALTIME` — use instead of `date +%s` forks.
 
+## D. Anti-Patterns Table
+
+Never emit, recommend, or leave unflagged any pattern on the left column. When you encounter one in existing code, refactor to the right column immediately or flag with a `⚠️` comment plus the fix.
+
+| ❌ Forbidden | ✅ Fix | Why |
+|---|---|---|
+| `local x=$(cmd)` | `local x; x=$(cmd)` | SC2155 — masks subshell exit code. Caller sees success on failure. |
+| `cmd file.txt > file.txt` | `cmd file.txt > tmp && mv tmp file.txt` | Shell truncates redirection target BEFORE cmd reads it. Data loss. |
+| `x && y \|\| z` | `if x; then y; else z; fi` | `z` runs if `y` fails. Not equivalent to if/else. |
+| `for f in $(ls)` | `for f in *` (glob) or `find . -print0` + `while read -d ''` | Parsing `ls` is fundamentally broken (filenames with spaces/newlines). |
+| `` `cmd` `` | `$(cmd)` | Backticks don't nest, deprecated since 1990s POSIX. |
+| `eval "$var"` | `declare -n ref="$var"` or just call function | Injection vector, uncheckable. Almost never needed. |
+| `echo "$data"` with arbitrary data | `printf '%s\n' "$data"` | `echo` inconsistent across shells/args starting with `-`; `printf` portable and deterministic. |
+| `[[ "$a" > "$b" ]]` for numbers | `[[ "$a" -gt "$b" ]]` or `(( a > b ))` | `>` in `[[ ]]` is locale-dependent string compare. |
+| `(( i++ ))` with i=0 under `set -e` | `: $(( i++ ))` or `(( ++i ))` | Post-increment returns 1 when result was 0. Kills strict-mode script. |
+| `exit 1` inside a function (non-top-level) | `return 1` | `exit` kills whole script. Caller loses control. |
+| `cat file \| cmd` | `cmd < file` | Useless use of cat. Spawns extra process, loses exit code in pipefail-less mode. |
+| `cd "$dir" && rm -rf ./*` | `cd "$dir" || exit` then explicit list, never `rm -rf` | If `cd` fails, `rm` runs in current dir. Disaster. |
+| `while read line; do ... done <<< "$(cmd)"` | `while IFS= read -r line; do ... done < <(cmd)` | Here-string forces subshell, loses variable mutations outside loop. |
+| `$*` in arguments | `"$@"` quoted | `$*` joins with IFS then re-splits. Loses structure. |
+| No IFS=`read` for line splitting | `while IFS= read -r line` | Default IFS strips leading/trailing whitespace from line content. |
+| `set -e` alone as "strict mode" | Header from section A | `set -e` silently disabled in `$( )` without `inherit_errexit`. |
+
 ## Scope Out — POSIX-sh
 
 This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
