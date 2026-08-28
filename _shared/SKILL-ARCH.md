@@ -59,3 +59,11 @@
 ## Modification
 
 Toute modification de ce fichier nécessite revue par maintainer + flag dans Revision History de chaque skill impacté.
+
+## Cross-repo : opencode/skills family
+
+Les 11 skills sous `~/.config/opencode/skills/` (famille caveman + rust-idioms-reviewer) portent aussi `type:` en frontmatter depuis 2026-08-26 :
+- 1 orchestrator : `cavecrew` (routing subagents caveman-style)
+- 10 sub-skills : `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-memory`, `caveman-plan`, `caveman-review`, `caveman-stats`, `caveman-workspace`, `rust-idioms-reviewer`
+
+**Différence de contrat :** ces skills sont minimal-by-design (12-111 lignes) et n'adoptent PAS les slots Snapshot/Related/Revision History. Le type: seul y cohabite avec leur style compact.
