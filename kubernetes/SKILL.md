@@ -264,6 +264,121 @@ Never emit, recommend, or leave unflagged any pattern on the left column. When e
 | `securityContext: {}` empty block (looks intentional, does nothing) | Full restricted profile | Empty block = silent no-op; PSA audit flags it. |
 | Deprecated annotation `kubectl.kubernetes.io/last-applied-configuration` sprawl | `kubectl apply --server-side` (field managers, not annotation) | Server-side apply GA since 1.22, removes annotation bloat. |
 
+## E. Helm and Kustomize Conventions
+
+**Helm chart structure (Helm v4):**
+
+```
+mychart/
+├── Chart.yaml          # apiVersion: v2 (never v1 — Helm 2 legacy)
+├── values.yaml         # defaults
+├── values-prod.yaml    # env override examples (not committed secrets)
+├── templates/
+│   ├── _helpers.tpl    # named templates
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── NOTES.txt
+└── charts/             # subchart dependencies (vendored)
+```
+
+**Values layering discipline:**
+1. `values.yaml` = sane defaults, no secrets.
+2. Env overrides (`values-prod.yaml`) in GitOps repo, also no secrets.
+3. Secrets injected at runtime via External Secrets Operator or SOPS-encrypted file.
+
+**Never:** commit secrets in plain values, inline passwords in templates, use `.Values.password` without a `required` function gate.
+
+**Template guards:**
+
+```yaml
+password: {{ required "password required (set via secrets store)" .Values.db.password }}
+```
+
+**Library charts** (Helm 3.5+): share common template idioms via `type: library` charts. See `references/helm-chart-conventions.md` for full pattern.
+
+**Kustomize** (built into kubectl since 1.14):
+
+```
+base/
+├── kustomization.yaml
+├── deployment.yaml
+└── service.yaml
+overlays/
+├── dev/
+│   ├── kustomization.yaml
+│   └── patch-replicas.yaml
+└── prod/
+    ├── kustomization.yaml
+    └── patch-resources.yaml
+```
+
+`kustomization.yaml` per overlay:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: [ ../../base ]
+patches:
+  - path: patch-resources.yaml
+images:
+  - name: myapp
+    newName: registry.example.com/myapp
+    digest: sha256:PINNED_DIGEST
+```
+
+Prefer Kustomize for config-shape variation (env-specific replicas/resources), Helm for packaged distribution (3rd-party apps, library charts).
+
+## F. Safe-Change Discipline
+
+**Before emitting or writing any manifest for the user, propose the verification sequence:**
+
+```bash
+# 1. Client-side schema validation (no cluster needed)
+kubeconform -strict -kubernetes-version 1.37.0 manifest.yaml
+
+# 2. Server-side dry-run (validates admission webhooks too)
+kubectl apply --server-side --dry-run=server -f manifest.yaml
+
+# 3. Diff against live cluster state
+kubectl diff --server-side -f manifest.yaml
+```
+
+Only then does the user (or live-ops tool) run `kubectl apply -f manifest.yaml`.
+
+**Never suggest:** `kubectl apply -f .` whole directory, `kubectl apply -f https://...` from a URL without inspection, `kubectl edit` on a production resource.
+
+**GitOps target state:** when the user's org runs Flux or ArgoCD, the skill's recommendation is to commit the manifest change to the GitOps repo, open PR, let the operator reconcile — not `kubectl apply` from a workstation.
+
+## G. Observability Hints
+
+Every Long-running workload should ship with:
+
+**Prometheus scrape annotations:**
+
+```yaml
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+```
+
+**OpenTelemetry sidecar (when tracing needed):**
+
+```yaml
+# Native sidecar pattern (1.29+)
+initContainers:
+  - name: otel-collector
+    image: otel/opentelemetry-collector:0.110.0
+    restartPolicy: Always
+    args: [ --config=/etc/otel/config.yaml ]
+    volumeMounts: [ { name: otel-config, mountPath: /etc/otel } ]
+```
+
+**Structured logs:** apps should emit JSON logs to stdout. Mention in review if app appears text-log only. Cilium users: Hubble for network observability; otherwise Pixie for eBPF APM.
+
+**Security hint:** never `hostPort: 0.0.0.0` binding; use ClusterIP + Ingress/Gateway. Public bind on pod = bypasses network policy.
+
 ## Scope Out — Live Cluster Ops
 
 This skill authors and reviews manifests. It does NOT execute `kubectl apply`, `kubectl delete`, `kubectl scale`, `helm install`, or any live mutation. For live ops, the user or orchestrator connects to `kubernetes-mcp-server` (containers/kubernetes-mcp-server) or invokes `kubectl-ai` directly. If the user asks this skill to "apply this to prod" or "delete that pod", the skill declines the operation and offers the manifest + the exact kubectl command for the user to run.
