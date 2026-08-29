@@ -29,7 +29,7 @@ This gate exists because three failure modes recur: (1) `local x=$(cmd)` masks s
 
 ## Snapshot
 
-This skill owns the rules an agent applies when writing, editing, reviewing, or debugging a Bash 4.4+ script. It mandates the strict-mode header (set -euo pipefail + inherit_errexit + IFS), systematic quoting discipline, modern idioms 2026 (`[[ ]]`, `(( ))`, `mapfile`, process substitution, bash 5.3 forkless `${| cmd; }`), a forbidden→fix anti-patterns table, trap-based error handling, and bats-core + shellcheck testing. It is opinionated bash-only: POSIX-sh (Alpine, busybox, init.d) is out of scope and the skill will decline rather than mix syntaxes.
+This skill owns the rules an agent applies when writing, editing, reviewing, or debugging a Bash 4.4+ script. It mandates the strict-mode header (set -euo pipefail + inherit_errexit + IFS), systematic quoting discipline, modern idioms 2026 (`[[ ]]`, `(( ))`, `mapfile`, process substitution, `declare -n` namerefs), a forbidden→fix anti-patterns table, trap-based error handling, and bats-core + shellcheck testing. It is opinionated bash-only: POSIX-sh (Alpine, busybox, init.d) is out of scope and the skill will decline rather than mix syntaxes.
 
 **Announce at start:** `I'm using the shell-scripting skill to <verb: write|edit|review|debug> this <script|snippet>.`
 
@@ -140,12 +140,13 @@ Use these when target bash is ≥ 4.4 (default on any modern distro, macOS via H
 
 **Bash 5.3 forkless command substitution (2025):**
 
+Bash 5.3 introduced `${ command; }` — runs in current shell, no fork, preserves state mutations. Availability still uneven across distros in 2026; verify before relying on it:
+
 ```bash
-result=${ cmd; }       # runs in current shell, no fork, no subshell-loss of state
-output=${| cmd; }      # same for pipelines
+bash -c 'x=${ echo ok; }; echo "$x"' 2>/dev/null || echo "bash too old; use \$(cmd)"
 ```
 
-Fallback when bash < 5.3 or unclear: stick with `result=$( cmd )` — universally supported.
+Fallback (universally supported) : `result=$( cmd )`.
 
 **Reading into arrays — `mapfile`:**
 
@@ -371,7 +372,7 @@ Pin shellcheck version in CI (`shellcheck --version` shows it). New releases add
 
 ## Scope Out — POSIX-sh
 
-This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `${| cmd; }`, `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
+This skill is Bash 4.4+ opinionated. If the user's target is Alpine Linux, busybox, init.d scripts, or cross-distro packaging where `/bin/sh` may be dash, **decline or downgrade explicitly** rather than emit bash-only syntax that fails elsewhere. POSIX-sh authoring deserves a separate skill (`sh-posix-scripting`, not yet written). Mentioning `[[ ]]`, `mapfile`, `declare -n`, or `inherit_errexit` to a POSIX target is a violation.
 
 ---
 
@@ -425,7 +426,7 @@ Terms defined here are local to this skill. TDD/RED/GREEN/Iron Law/Hard Gate ter
 | NUL-delimited | `\0` separator — safe for arbitrary filenames (spaces, newlines, leading dashes). Paired with `find -print0` and `read -d ''`. |
 | SC2155 | ShellCheck code: `declare/local` masking command substitution exit status. Fix: split declaration from assignment. |
 | Nameref | `declare -n ref=var` — bash 4.3+ name reference. Replaces `eval` for array indirection. |
-| Forkless substitution | `${ cmd; }` and `${| cmd; }` — bash 5.3+. Runs in current shell, no subshell fork. |
+| Forkless substitution | `${ cmd; }` — bash 5.3+. Runs in current shell, no subshell fork. Verify availability before relying (uneven distro coverage 2026). |
 | Word splitting | Splitting `$var` on IFS chars when unquoted. Class-0 bug source. |
 
 ## Evals
@@ -446,7 +447,7 @@ Run these 3 pressure scenarios to validate this skill still holds after any edit
 
 ### Scenario 3 : posix-confusion
 
-**Brief** : "Write a script for an Alpine Linux container (busybox sh, no bash). Use strict mode and `${| cmd; }` for speed."
+**Brief** : "Write a script for an Alpine Linux container (busybox sh, no bash). Use strict mode and bash-only idioms like `[[ ]]` or `mapfile` for clarity."
 
 **Expected FAIL** : Agent detects POSIX target from "Alpine" + "no bash", refuses bash-only features, either (a) declines scope and offers `sh-posix-scripting` skill, or (b) rewrites without bashisms and warns about each downgrade.
 
