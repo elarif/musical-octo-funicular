@@ -191,6 +191,79 @@ spec:
 
 **Jobs / CronJobs:** `batch/v1` only. Set `ttlSecondsAfterFinished` on Jobs to avoid finished-pod accumulation.
 
+## C. Resources and Limits
+
+**Always set `resources.requests`** — kube scheduler uses them for bin-packing, VPA uses them for recommendations, HPA scaling math depends on them.
+
+**Always set `resources.limits`** — protects neighbors from runaway pods; enables Guaranteed QoS when requests == limits.
+
+**QoS tiers:**
+- `Guaranteed` — requests == limits on all containers. Survives node-pressure eviction last. Use for: critical infra, low-latency.
+- `Burstable` — requests < limits. Default for typical apps.
+- `BestEffort` — no requests/limits. Evicted first. Avoid in production.
+
+**CPU limits nuance (cgroup v2, default since k8s 1.25):** CPU limits can **throttle latency-sensitive services** even when CPU is idle. Modern consensus (Tim Hockin, k8s maintainers, 2024+):
+- **Set `requests.cpu`** (drives scheduling).
+- **Skip `limits.cpu`** for latency-sensitive services; set it for batch jobs. If you must set, monitor `container_cpu_cfs_throttled_seconds_total`.
+- Memory limits are different: exceeding memory = OOM-kill, so always set `limits.memory`.
+
+**HPA (autoscaling/v2 stable):**
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: { name: myapp }
+spec:
+  scaleTargetRef: { apiVersion: apps/v1, kind: Deployment, name: myapp }
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource: { name: cpu, target: { type: Utilization, averageUtilization: 70 } }
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300       # don't flap
+```
+
+Use `behavior` to control scale-down rate. Default is often too aggressive.
+
+**VPA** (Vertical Pod Autoscaler): installs alongside, recommends right-size. In-place pod resize (1.35+) removes the historic "VPA must restart pod" pain. Use VPA in `updateMode: "Auto"` for long-running steady-state workloads.
+
+## D. Anti-Patterns Table
+
+Never emit, recommend, or leave unflagged any pattern on the left column. When encountered in existing YAML, refactor to right column or flag `🚫` + the fix reference.
+
+| ❌ Forbidden | ✅ Fix | Why |
+|---|---|---|
+| `kind: PodSecurityPolicy` | Namespace PSA labels: `pod-security.kubernetes.io/enforce: restricted` | PSP removed v1.25. |
+| `apiVersion: extensions/v1beta1` (anything) | `apps/v1`, `networking.k8s.io/v1`, etc. | Removed in v1.16-1.22. |
+| `image: app:latest` | `image: app@sha256:<digest>` | Untraceable, breaks rollback, blocks admission policy. |
+| `image: app:v1.0` (mutable tag) | `image: app@sha256:<digest>` | Tags mutable; digest immutable. |
+| `emptyDir` for database / uploads / stateful data | `volumeClaimTemplates` on StatefulSet, or `persistentVolumeClaim` on pod | emptyDir dies with pod. |
+| `hostPath` volume | PVC-backed local PV or CSI driver | Escapes container, host-coupled. |
+| `hostNetwork: true` | ClusterIP Service + explicit NetworkPolicy | Bypasses CNI policy layer. |
+| `hostPID: true` / `hostIPC: true` | Remove; or scoped exception only with documented justification | Bypass isolation. |
+| `securityContext.privileged: true` | Add specific `capabilities.add: [NET_ADMIN]` etc. if truly needed, else omit | privileged = full host root. |
+| `capabilities.add: [NET_ADMIN]` on routine pods | `capabilities.drop: [ALL]` (default restricted) | NET_ADMIN allows iptables mutations. |
+| No `securityContext` on pod or container | seccompProfile RuntimeDefault + runAsNonRoot + RO root FS + drop ALL caps | PSA `restricted` baseline. |
+| `kind: Endpoints` | `kind: EndpointSlice` (discovery.k8s.io/v1) | Endpoints deprecated v1.33; slices scale better. |
+| `Service.spec.externalIPs` | LoadBalancer Service or Gateway API `Gateway`+`HTTPRoute` | Removed v1.36 — security risk (IP spoofing). |
+| `kind: Ingress` with `kubernetes.io/ingress.class` annotation | `spec.ingressClassName` field; or migrate to Gateway API | Annotation deprecated; Ingress frozen post-Ingress-nginx retirement. |
+| No NetworkPolicy at all in a namespace | Default-deny ingress + egress NetPol, then allowlist | Zero-trust baseline; without it any pod can reach any pod. |
+| ClusterRoleBinding to `cluster-admin` for a service account | Scoped `Role` in app namespace | Massive privilege escalation on SA compromise. |
+| `imagePullPolicy: Always` on `:latest`-tagged images (default) | Pinned digest + `IfNotPresent` | Always-pull wastes bandwidth, can surprise. |
+| No `livenessProbe` | Define it, distinct from readiness | Silent hung processes never restart. |
+| liveness == readiness endpoint | Distinct endpoints (liveness = process alive; readiness = can serve traffic) | Same endpoint = cascading failures during GC pause etc. |
+| No `readinessProbe` | Define it | Pods take traffic before ready. |
+| `runAsUser: 0` without userns | `runAsUser: 10001` + `runAsNonRoot: true`; OR `hostUsers: false` + userns (1.36+) | Root-in-container = root-adjacent-on-host. |
+| `kubectl apply -f .` (whole directory untargeted) | Targeted `kubectl apply -f specific.yaml` + `kubectl diff` first | Broad applies destroy unknown state. |
+| Hardcoded secrets in YAML (`password: abc123`) | External Secrets Operator, SOPS-encrypted file, sealed-secrets | Repo leaks = prod leaks. |
+| `terminationGracePeriodSeconds: 0` | Omit (default 30s) or tune purposefully | Instant SIGKILL = request drops, no cleanup. |
+| No `terminationMessagePolicy` customization when logging matters | `terminationMessagePolicy: FallbackToLogsOnError` | Easier debugging on CrashLoop. |
+| No `podDisruptionBudget` on critical deployments | `policy/v1 PodDisruptionBudget` `minAvailable: 1` | Voluntary disruptions (drain, upgrades) can take all replicas. |
+| `securityContext: {}` empty block (looks intentional, does nothing) | Full restricted profile | Empty block = silent no-op; PSA audit flags it. |
+| Deprecated annotation `kubectl.kubernetes.io/last-applied-configuration` sprawl | `kubectl apply --server-side` (field managers, not annotation) | Server-side apply GA since 1.22, removes annotation bloat. |
+
 ## Scope Out — Live Cluster Ops
 
 This skill authors and reviews manifests. It does NOT execute `kubectl apply`, `kubectl delete`, `kubectl scale`, `helm install`, or any live mutation. For live ops, the user or orchestrator connects to `kubernetes-mcp-server` (containers/kubernetes-mcp-server) or invokes `kubectl-ai` directly. If the user asks this skill to "apply this to prod" or "delete that pod", the skill declines the operation and offers the manifest + the exact kubectl command for the user to run.
