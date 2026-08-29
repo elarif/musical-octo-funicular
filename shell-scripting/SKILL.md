@@ -92,13 +92,20 @@ IFS=$'\n\t'
 **Capture subcommand output safely** (fixes ShellCheck SC2155):
 
 ```bash
-# ❌ WRONG — masks exit code of cmd
-local x
-x=$(cmd)          # but written as 'local x=$(cmd)' hides SC2155
+# ❌ WRONG — masks exit code of cmd (SC2155)
+local x=$(cmd)    # caller cannot see cmd's failure; $? is 'local' builtin status
 
 # ✅ CORRECT — declaration and assignment separated
 local x
 x=$(cmd)          # now $? reflects cmd's exit code
+```
+
+**Capturing the exit code explicitly:**
+
+```bash
+local x rc
+x=$(cmd) ; rc=$?    # rc records cmd's exit code
+[[ $rc -eq 0 ]] || { err "cmd failed (rc=$rc)"; return "$rc"; }
 ```
 
 **Parameter expansion defaults:**
