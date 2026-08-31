@@ -17,6 +17,7 @@
 ## Distributed
 
 - **Quorum** — W + R > N (lecture/écriture majoritaires). Tolère (N-W) writes lost, (N-R) nodes down.
+- **Session token** — Enregistrement par session du LSN/timestamp de la dernière écriture. Un réplica ne sert la session qu'après application — le mécanisme de read-your-writes et monotonic reads.
 - **HLC** — Hybrid Logical Clock. Horloge logique + timestamp physique. Ordering sans TrueTime.
 - **TrueTime** — API Spanner avec bornes d'incertité garanties (hardware GPS/atomic).
 - **SI** — Snapshot Isolation. Lecture cohérente d'un snapshot. Autorise write skew.

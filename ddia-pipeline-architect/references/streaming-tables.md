@@ -96,7 +96,7 @@ VALUES (:order_id, :total, :status, :event_ts)
 ON CONFLICT (order_id) DO UPDATE
   SET total = EXCLUDED.total, status = EXCLUDED.status,
       updated_at = EXCLUDED.updated_at
-WHERE EXCLUDED.updated_at > order_summary.updated_at;  -- last-write-wins by event ts (from the log)
+WHERE EXCLUDED.updated_at > order_summary.updated_at;  -- last-write-wins ordered by ingest position (Kafka offset), NOT wall-clock — event_ts derives from the log's monotonic source
 ```
 
 ```sql

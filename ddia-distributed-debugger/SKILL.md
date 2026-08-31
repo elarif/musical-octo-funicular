@@ -262,6 +262,8 @@ User: "we rebuild the event order in our audit log by `created_at` — servers a
 
 **Decision rule:** need linearizable writes/metadata → an existing Jepsen-tested Raft system (etcd, CockroachDB, NATS) before any bespoke consensus; need cheaper quorums → witness replicas with real voting participation; need failover → leases + fencing tokens, never ping-timeout elections. Anything else → name what you actually have (async replication, single leader) and its anomaly set — section B.
 
+**Observability note (2026):** eBPF is the standard production-visibility layer for these audits — Cilium/Hubble for network-level partition and drop confirmation, per-node tracing for in-flight request fate. When a user reports "we lost writes during a network blip", the eBPF-level drop trace is the evidence that beats every log-line theory.
+
 **Worked example — consensus in action:**
 
 User: "our Postgres primary failed over this morning; monitoring shows a 40-second window where the old primary still accepted writes — we had to reconcile by hand." Audit output: "Asymmetric split-brain, section B/D shape: the old leader was cut from a quorum it could no longer reach, but its *clients* could still reach it — per-write quorum acknowledgment absent, so a minority-side leader kept committing (anti-pattern row 15). Fix ladder: (1) synchronous replication with quorum ack per commit — a cut primary cannot commit, clients fail fast instead of writing into a doomed history; (2) fencing tokens on the storage path — every leader's writes carry a monotonic epoch, storage rejects stale epochs, so even a rogue writer with live clients cannot corrupt the new primary's history; (3) failover by lease with a documented bounded-drift assumption, not ping-timeout — 'slow' and 'deposed' must be distinguishable. Name the mechanism you adopt, and the residual: with (1) alone, a partition inside the client's network can still reach the old primary — (2) is the fence that closes it (see `references/isolation-consistency.md` § Jepsen for the Galera 12.1.2 finding: certification-style 'synchronous' replication lost committed writes during rejoin — mechanism, not marketing word)."
@@ -324,7 +326,6 @@ The table is the audit's checklist: each row is a claim shape the agent must ref
 
 | Term | Meaning |
 |---|---|
-| Session token | Per-session record of the last write's timestamp/LSN; a replica serves the session only after applying past it — the read-your-writes and monotonic-reads mechanism. |
 | Anomaly matrix | Table of anomaly (dirty read, non-repeatable read, phantom, lost update, write skew, read skew) × isolation level — the per-engine ground truth in `references/isolation-consistency.md` § matrix. |
 | Fencing token | Monotonic per-leader epoch attached to every write; storage rejects stale epochs — the asymmetric-partition defense. |
 | rw-antidependency | SSI's tracked shape: one transaction's read predicate overlaps another's write range — the write-skew signature that triggers a 40001 abort. |

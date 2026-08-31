@@ -328,7 +328,6 @@ Output: "ScyllaDB, partition by sensor_id, clustering by timestamp, tablets enab
 | Term | Meaning |
 |---|---|
 | Polyglot persistence | Multiple datastore types in one system, each matched to its workload. Justified only by measured pain per store — not day-1 architecture. |
-| Session token | Replica-safe read marker: replica must have applied the session's last write LSN before serving it. Implements read-your-writes. |
 | Schema registry | Governance layer enforcing compatibility on schema evolution. 2026: Buf Schema Registry (Protobuf) superseded Confluent registry as the general answer. |
 | Document aggregate | Self-contained record loaded/stored as a whole; the unit document stores optimize for. |
 | Interleaving | Spanner table layout nesting child rows under parents — co-location for parent-child reads. |

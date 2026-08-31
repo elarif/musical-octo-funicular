@@ -77,12 +77,11 @@ Mapping table — each row is the input to the parent skill's section E question
 | Droits d'accès (ACL) shallow (depth ≤ 3) | Relational + FK | user→role→permission joins; constraints enforce integrity; recursive CTE handles inheritance |
 | Droits d'accès deep inheritance / org trees unbounded | Graph (AGE or Neo4j) | Variable-depth traversal dominates; SQL CTE cost grows with depth per row |
 | Audit bitemporal | Relational / bitemporal store | Valid-time + transaction-time queries; Postgres with `tstzrange` + exclusion constraints, or XTDB for first-class bitemporal queries |
-
-**Bitemporal detail (the XTDB mention):** audit and compliance workloads ask two questions — "what did we believe at time T?" (transaction time) and "what was true at time T?" (valid time). Postgres answers this with append-only rows + `tstzrange` validity + exclusion constraints preventing overlaps, at the cost of manual query discipline. XTDB (bitemporal-first, SQL dialect, object-storage-native in v2) makes both axes first-class query citizens. Choose Postgres when bitemporal queries are a minority of the workload; XTDB when they are the workload (regulatory reconstruction, insurance history).
 | Catalogue produits avec attributs variables | Document (`jsonb`) | Per-category attribute sets; GIN indexes on attributes; stay in one engine |
 | Recommendation / similarity search | Vector (`pgvector`) | ANN over embeddings; HNSW index; dedicated vector DB only past ~10M vectors |
 | Recherche full-text | Postgres `tsvector` | Integrated, adequate to mid-scale; Elasticsearch/OpenSearch when scale or relevance tuning demands |
-| Catalogue produits variant-heavy | Document (`jsonb`) | Per-SKU attribute sets differ by category; containment queries via GIN |
+
+**Bitemporal detail (the XTDB mention):** audit and compliance workloads ask two questions — "what did we believe at time T?" (transaction time) and "what was true at time T?" (valid time). Postgres answers this with append-only rows + `tstzrange` validity + exclusion constraints preventing overlaps, at the cost of manual query discipline. XTDB (bitemporal-first, SQL dialect, object-storage-native in v2) makes both axes first-class query citizens. Choose Postgres when bitemporal queries are a minority of the workload; XTDB when they are the workload (regulatory reconstruction, insurance history).
 
 ## Postgres-first 2026 — rationale
 
