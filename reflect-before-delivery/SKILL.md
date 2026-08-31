@@ -266,7 +266,7 @@ Parameters-level fixes are legitimate ONLY when everything above them holds. Whe
 | Field | Value |
 |---|---|
 | Document ID | `SKILL-RBD-001` |
-| Revision | 1 |
+| Revision | 2 |
 | Effective Date | 2026-08-31 |
 | Owner | Skills maintainer |
 | Approver | Skills maintainer |
