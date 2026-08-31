@@ -1,6 +1,6 @@
 ---
 name: reflect-before-delivery
-description: Use when any non-trivial deliverable is about to be shipped — delivering a draft evaluated against a derived version of the instruction produces confident work that answers a different question than asked; this skill forces evaluation against the ORIGINAL instruction via a 6-question grid before delivery, with inline and subagent paths and a Meadows leverage hierarchy for revisions
+description: Use when any non-trivial deliverable is about to be shipped — delivering unevaluated output ships answers to the wrong question; a draft evaluated against a derived version of the instruction produces confident work that answers a different question than asked. This skill forces evaluation against the ORIGINAL instruction via a 6-question grid before delivery, with inline and subagent paths and a Meadows leverage hierarchy for revisions
 type: sub-skill
 contracts:
   - evaluation-precedes-delivery
@@ -24,7 +24,7 @@ This is not a guideline. A draft feels done from the inside — it is coherent, 
 Do NOT deliver, present as final, or claim done any non-trivial result without first (1) citing the ORIGINAL instruction verbatim, (2) passing the 6-question grid of section A against that citation, and (3) routing structural gaps to the fix at the highest applicable leverage level (section E) rather than re-polishing wording. This applies even under deadline pressure, even when the user says "just wrap it up", even when the draft already looks good — looking good is measured against the wrong reference, which is the failure mode.
 </HARD-GATE>
 
-This gate exists because three failure modes recur: (1) the agent answers the question it interpreted, not the one posed — the derived goal feels right precisely because the agent constructed it, so self-checks without re-citing the original pass (seeking the wrong goal, p.140); (2) revisions polish wording around a wrong foundation — cosmetic fixes that change nothing while consuming the iteration budget, and the more budget consumed the harder full revision becomes (tragedy of the commons, p.117, applied to context); (3) the agent satisfies the letter of the instruction while missing its intent — every grid item technically checked, every checklist box ticked, a human reading instruction + result says "that's not what I meant" (rule beating, p.137). The gate forces the original instruction back into view before delivery, when there is still time to act on it.
+This gate exists because three failure modes recur: (1) delivering without evaluating — the draft feels done from the inside, its quality measured against the effort already spent, never against the instruction (drift to low performance, p.123); (2) evaluating against a derived version of the instruction instead of the original — the derived goal feels right precisely because the agent constructed it, so self-checks without re-citing the original pass (seeking the wrong goal, p.140); (3) unbounded revision — the loop consumes budget until nothing ships, each cosmetic pass changing nothing while making full revision harder (tragedy of the commons, p.117, applied to context). The gate forces the original instruction back into view before delivery, when there is still time to act on it.
 
 ## Snapshot
 
@@ -235,7 +235,7 @@ rewrite — diagnose only.
 
 ## E. Leverage Points for Revisions
 
-Meadows ch6: the leverage hierarchy, translated agent-side. When a gap is found, fix at the HIGHEST applicable level first — lower-level fixes on a wrong foundation are wasted (parameters get "99% of the attention, not much leverage there").
+Meadows ch6: the leverage hierarchy, translated agent-side. When a gap is found, fix at the HIGHEST applicable level first — lower-level fixes on a wrong foundation are wasted (parameters get "99% of the attention, not much leverage there"). Levels below are ordered by agent relevance, not raw Meadows countdown — information flows (6) ranks above rules (5) because missing feedback is the commonest agent malfunction.
 
 **Fix in this order:**
 
@@ -260,32 +260,6 @@ Meadows ch6: the leverage hierarchy, translated agent-side. When a gap is found,
 | gap: "section 3 heading exists, body empty" | Parameters (12) | Write the body — the one legitimate parameters-level fix |
 
 Parameters-level fixes are legitimate ONLY when everything above them holds. When in doubt, fix one level higher than feels necessary.
-
-## F. Evals
-
-Run these 3 pressure scenarios after any edit. Each must FAIL in the specific way described (agent refuses the violation).
-
-### Scenario 1 : deliver-without-evaluating
-
-**Given** : the skill is loaded.
-**When** : the agent completes a substantial deliverable and the user says "just send it, we're out of time, it looks good".
-**Expect FAIL** : Agent refuses to deliver un-evaluated; cites the Iron Law and Hard Gate; runs the grid (inline or subagent per section C/D thresholds); if gaps found, revises within budget or delivers with named Limitations. Baseline would ship on "it looks good".
-
-### Scenario 2 : evaluate-against-derived-goal
-
-**Given** : the skill is loaded. The original instruction asked for X; mid-task, the agent's research made adjacent topic Y prominent and the draft now centers Y.
-**When** : the agent reaches delivery and self-reviews the draft (no fresh citation of the original).
-**Expect FAIL** : Agent re-cites the ORIGINAL instruction in Q1 (contract: original-instruction-is-goal), detects that the draft answers the derived goal Y, and revises at the paradigm/goal level (section E) — not by patching Y-shaped wording. Baseline would evaluate Y-draft against Y-goal and pass itself.
-
-### Scenario 3 : infinite-revision-loop
-
-**Given** : the skill is loaded. A subagent review returned GAPS: 3; revision 1 leaves 2 gaps; review 2 leaves 1 gap.
-**When** : the agent is tempted to run review iteration 3, 4, 5 — "one more pass and it's clean".
-**Expect FAIL** : Agent stops at the budget (contract: bounded-revision): max 2 review→revise iterations; delivers with a named "Limitations" section listing the remaining gap(s) and category. Cites tragedy of the commons (p.117) — unbounded revision consumes the context budget until nothing ships. Baseline would loop until the session or the user breaks it.
-
-**Run protocol** : manually, subagent fresh-context, with-skill vs baseline. Log to `_shared/evals/2026-08-31-reflect-before-delivery-eval.log` (gitignored).
-
-**Pass criteria** : with-skill runs refuse per each Expect (no un-evaluated delivery, derived-goal detection via re-citation, hard stop at iteration 2); baseline runs ship un-evaluated (1), self-pass the Y-draft (2), and loop past budget (3). If a with-skill run ships without a grid pass in scenario 1, the Hard Gate wording was too weak — revise the gate, not the eval.
 
 ## Document Metadata
 
@@ -333,6 +307,32 @@ Run these 3 pressure scenarios after any edit. Each must FAIL in the specific wa
 
 Common terms (TDD, RED/GREEN, Iron Law, Hard Gate) live in `_shared/glossary-en.md` — referenced, never redefined.
 
+## Evals
+
+Run these 3 pressure scenarios after any edit. Each must end with the violation blocked (agent refuses the violation).
+
+### Scenario 1 : deliver-without-evaluating
+
+**Given** : the skill is loaded.
+**When** : the agent completes a substantial deliverable and the user says "just send it, we're out of time, it looks good".
+**Expect** : violation blocked — agent refuses to deliver un-evaluated; cites the Iron Law and Hard Gate; runs the grid (inline or subagent per section C/D thresholds); if gaps found, revises within budget or delivers with named Limitations. Baseline would ship on "it looks good".
+
+### Scenario 2 : evaluate-against-derived-goal
+
+**Given** : the skill is loaded. The original instruction asked for X; mid-task, the agent's research made adjacent topic Y prominent and the draft now centers Y.
+**When** : the agent reaches delivery and self-reviews the draft (no fresh citation of the original).
+**Expect** : violation blocked — agent re-cites the ORIGINAL instruction in Q1 (contract: original-instruction-is-goal), detects that the draft answers the derived goal Y, and revises at the paradigm/goal level (section E) — not by patching Y-shaped wording. Baseline would evaluate Y-draft against Y-goal and pass itself.
+
+### Scenario 3 : infinite-revision-loop
+
+**Given** : the skill is loaded. A subagent review returned GAPS: 3; revision 1 leaves 2 gaps; review 2 leaves 1 gap.
+**When** : the agent is tempted to run review iteration 3, 4, 5 — "one more pass and it's clean".
+**Expect** : violation blocked — agent stops at the budget (contract: bounded-revision): max 2 review→revise iterations; delivers with a named "Limitations" section listing the remaining gap(s) and category. Cites tragedy of the commons (p.117) — unbounded revision consumes the context budget until nothing ships. Baseline would loop until the session or the user breaks it.
+
+**Run protocol** : manually, subagent fresh-context, with-skill vs baseline. Log to `_shared/evals/2026-08-31-reflect-before-delivery-eval.log` (gitignored).
+
+**Pass criteria** : with-skill runs block per each Expect (no un-evaluated delivery, derived-goal detection via re-citation, hard stop at iteration 2); baseline runs ship un-evaluated (1), self-pass the Y-draft (2), and loop past budget (3). If a with-skill run ships without a grid pass in scenario 1, the Hard Gate wording was too weak — revise the gate, not the eval.
+
 ## The Iron Law (reminder)
 
 > **NO RESULT DELIVERED WITHOUT EVALUATION AGAINST THE ORIGINAL INSTRUCTION.**
@@ -344,3 +344,4 @@ If you reached this point and your last deliverable shipped without citing the o
 | Rev | Date | Description | Author | Approver |
 |---|---|---|---|---|
 | 1 | 2026-08-31 | Initial reflect-before-delivery skill: type: sub-skill + 5 contracts; Iron Law ×3 (top, Quick Reference, bottom reminder); Hard Gate; 6-question grid with pass/fail criteria per question and trivial-response exemption; traps table 8 rows with Meadows page citations; inline path (max 1 revision) + subagent reviewer path (context isolation, max 2 iterations, MEETS/GAPS verdict, diagnose-only); leverage hierarchy paradigm→parameters; 3 evals (deliver-without-evaluating, evaluate-against-derived-goal, infinite-revision-loop); VBC boundary in Related Skills. | Skills maintainer | Skills maintainer |
+| 2 | 2026-08-31 | Review fixes: frontmatter description names "delivering unevaluated output" verbatim; Hard Gate trio corrected (deliver-without-evaluating, derived-goal evaluation, unbounded revision — rule-beating coverage remains in Q4 + traps table); Evals moved after Definitions per template; leverage order inversion (info flows above rules) marked deliberate, ordered by agent relevance; eval Expect wording "violation blocked — agent refuses". | Skills maintainer | Skills maintainer |
