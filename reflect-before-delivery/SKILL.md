@@ -28,7 +28,7 @@ This gate exists because three failure modes recur: (1) delivering without evalu
 
 ## Snapshot
 
-This skill owns the final evaluation pass before a non-trivial result is delivered. It mandates a 6-question grid (goal cited verbatim, scope, assumptions, traps, gaps, leverage) passed before delivery; two reflection paths — inline for short deliverables (max 1 revision), subagent reviewer for specs, plans, large files, PRs (max 2 review→revise iterations, reviewer receives ONLY the original instruction + the draft); and a Meadows-derived leverage hierarchy for revisions: paradigm first, parameters last. Execution verification — tests, lint, commands — crosses to `verification-before-completion`, never here.
+This skill owns the final evaluation pass before a non-trivial result is delivered. It mandates a 6-question grid (goal cited verbatim, scope, assumptions, traps, leverage, gaps) passed before delivery; two reflection paths — inline for short deliverables (max 1 revision), subagent reviewer for specs, plans, large files, PRs (max 2 review→revise iterations, reviewer receives ONLY the original instruction + the draft); and a Meadows-derived leverage hierarchy for revisions: paradigm first, parameters last. Execution verification — tests, lint, commands — crosses to `verification-before-completion`, never here.
 
 **Announce at start:** `I'm using the reflect-before-delivery skill to evaluate this result against the original instruction before delivering.`
 
@@ -142,7 +142,7 @@ System traps (Meadows, *Thinking in Systems*, ch5) map one-to-one onto agent fai
 | Shifting the burden (p.132) | Compensates a structural gap with wording; addiction to polish as the answer to everything | Gap reappears after polish; Q5 says the foundation is wrong | If the foundation is wrong, rewrite — never polish |
 | Escalation (p.124) | Adds ever more content, examples, "just in case" material to secure the answer instead of tightening it | Q2: sections that trace to no requirement keep growing | YAGNI: cut to what the instruction requires |
 | Success to the successful (p.128) | Previous responses' format privileged even when it misfits the new instruction | Q1: the original instruction re-anchored, not inherited from prior conversation shape | Re-anchor on the original instruction every time; format serves the instruction |
-| Tragedy of the commons (p.117) | Token/context budget consumed without guard until revision becomes impossible | Q3: iteration budget already spent, gaps still open | Bound the revision budget BEFORE revising (inline 1, subagent 2) |
+| Tragedy of the commons (p.117) | Token/context budget consumed without guard until revision becomes impossible | Ledger: budget spent, gaps still open | Bound the revision budget BEFORE revising (inline 1, subagent 2) |
 
 **Trap table discipline:** when a grid question fails, find the row whose manifestation matches BEFORE choosing a fix. The row's fix is structural; improvised fixes default to parameters (polish), the lowest-leverage level. Traps escape by structure change, not blame — including self-blame ("I'll try harder") which changes nothing structural.
 
